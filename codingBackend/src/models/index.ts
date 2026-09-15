@@ -13,6 +13,9 @@ import { OrderItem } from "./orderItem";
 User.hasMany(Otp, {foreignKey: "userId", as: "otps"});
 Otp.belongsTo(User, {foreignKey: "userId", as: "user"});
 
+// user and refresh token relationship
+
+
 User.hasMany(RefreshToken, {foreignKey: "userId", as: "refreshTokens"});
 RefreshToken.belongsTo(User, {foreignKey: "userId", as: "user"});
 
