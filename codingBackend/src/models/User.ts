@@ -12,6 +12,7 @@ User extends Model<InferAttributes<User>,
     declare lastName: string;
     declare email: string;
     declare password: string;
+    declare address: string;
     declare role: CreationOptional<UserRole>;
     declare isEmailVerified: CreationOptional<boolean>;
     declare isActive: CreationOptional<boolean>;
@@ -23,6 +24,7 @@ User extends Model<InferAttributes<User>,
         id: this.id,
         firstName: this.firstName,
         lastName: this.lastName,
+        address: this.address,
         email: this.email,
         role: this.role,
         isEmailVerified: this.isEmailVerified,
@@ -64,6 +66,11 @@ User.init(
         password: {
             type: DataTypes.STRING(255),
             allowNull: false,
+        },
+        address: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+
         },
         role: {
             type: DataTypes.ENUM("user", "admin", "vendor"),

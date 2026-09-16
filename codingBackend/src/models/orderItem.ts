@@ -4,11 +4,12 @@ import { sequelize } from "../config/db"
 export type itemStatus = "pending" | "shipped" | "delivered" 
 export type refundStatus = "none" | "requested" | "processing" | "refunded" | "rejected"
 
-export class OrderItem extends Model<InferCreationAttributes<OrderItem>, InferAttributes<OrderItem>>{
+export class OrderItem extends Model<InferAttributes<OrderItem>, InferCreationAttributes<OrderItem>>{
     declare id:  CreationOptional<string>;
     declare orderId: string;
     declare productId: string;
     declare businessId: string;
+    declare name: string;
     declare quantity: number;
     declare unitPrice: number;
     declare itemStatus: CreationOptional<itemStatus>
@@ -29,7 +30,7 @@ OrderItem.init({
     {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {model: "Order", key: "id"}
+        references: { model: "orders", key: "id" }
     },
     productId:
     {
@@ -42,17 +43,23 @@ OrderItem.init({
     {
         type: DataTypes.UUID,
         allowNull: false,
-        references: { model: "bussineses", key: "id"},
+        references: { model: "vendor_Businesses", key: "business_id" },
         onDelete: "CASCADE"
+    },
+    name:
+    {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     quantity:
     {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false
+
     },
     unitPrice:
     {
-        type: DataTypes.NUMBER,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     itemStatus:
@@ -63,7 +70,7 @@ OrderItem.init({
     },
     refundStatus:
     {
-        type: DataTypes.ENUM("none", "requetsed", "processing", "refunded", "rejected"),
+        type: DataTypes.ENUM("none", "requested", "processing", "refunded", "rejected"),
         allowNull: false,
         defaultValue: "none"
     },

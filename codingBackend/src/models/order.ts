@@ -1,7 +1,7 @@
 import { Model, InferAttributes, CreationOptional, DataTypes, InferCreationAttributes } from "sequelize";
 import { sequelize } from "../config/db";
 
-export type orderStatus = "pending" | "processed" | "shipped" | "delivered";
+export type orderStatus = "pending" | "cancelled" | "processed" | "shipped" | "delivered";
 export type paymentStatus = "unpaid" | "paid" | "refunded"
 
 
@@ -9,7 +9,7 @@ export type paymentStatus = "unpaid" | "paid" | "refunded"
 export class Order extends Model<InferAttributes<Order>, InferCreationAttributes<Order>>{
 declare id: CreationOptional<string>; 
 declare customerId: string;
-declare totalAmount: number;
+declare totalAmount?: number;
 declare orderStatus: CreationOptional<orderStatus>;
 declare paymentStatus: CreationOptional<paymentStatus>;
 declare shippingAddress: string;

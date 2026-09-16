@@ -31,8 +31,11 @@ vendorBusiness.belongsTo(User, {foreignKey: "userId", as: "user"})
 vendorBusiness.hasMany(product, {foreignKey: "businessId", as: "product"})
 product.belongsTo(vendorBusiness, {foreignKey: "businessId", as: "vendorBusiness"})
 
-Order.hasMany(product, {foreignKey: "productId", as: "product"})
-product.belongsTo
+Order.hasMany(OrderItem, {foreignKey: "orderId"})
+OrderItem.belongsTo(Order, {foreignKey: "orderId"})
+
+product.hasMany(OrderItem, { foreignKey: "productId"})
+OrderItem.belongsTo(product, { foreignKey: "productId"})
 
 
 export {sequelize, User, Otp, RefreshToken, BlacklistedToken, apiLogs, appSetting, product, vendorBusiness, Order, OrderItem};

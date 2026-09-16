@@ -96,7 +96,7 @@ const issueTokenPair = async (user: User, meta: RequestMeta) => {
     };
 };
 
-export const registerUser = async (input: { firstName: string; lastName: string; email: string; password: string;}) => {
+export const registerUser = async (input: { firstName: string; lastName: string; address: string; email: string; password: string;}) => {
 
     const existing = await User.findOne({ where: { email: input.email } });
     if (existing) {
@@ -124,6 +124,7 @@ export const registerUser = async (input: { firstName: string; lastName: string;
     firstName: input.firstName,
     lastName: input.lastName,
     email: input.email,
+    address: input.address,
     password: await hashPassword(input.password),
 });
 
