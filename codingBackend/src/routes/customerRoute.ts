@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as customerController from "../controllers/customerController";
-import { authenticate, authorize } from "../middleware/auth.middleware";
+import { authenticate } from "../middleware/auth.middleware";
 
 
 const router = Router()
@@ -14,7 +14,9 @@ router.get("/:businessId/products", customerController.getBusinessProducts)
 
 router.get("/:businessId/product/:productId", customerController.getBusinessProductById)
 
-router.post("/create-order", )
+router.post("/create-order", customerController.createOrder )
+
+router.post("/add-to-order", customerController.addToOrder)
 
 
 
