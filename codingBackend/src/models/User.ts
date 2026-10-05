@@ -69,7 +69,7 @@ User.init(
         },
         address: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: true
 
         },
         role: {

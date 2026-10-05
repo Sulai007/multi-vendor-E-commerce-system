@@ -1,5 +1,5 @@
 import { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
-import { User, Otp, RefreshToken, BlacklistedToken, OtpPurpose } from "../models";
+import { User, Otp, RefreshToken, BlacklistedToken, OtpPurpose, vendorBusiness } from "../models";
 import { ApiError } from "../utils/apiError";
 import { logger } from "../utils/logger";
 import { config } from "../config/env";
@@ -7,6 +7,7 @@ import { hashPassword, comparePassword } from "../helper/passwordHelper";
 import { generateOtpCode, hashOtp, compareOtp, otpExpiryDate } from "../helper/otpHelper";
 import {
     signAccessToken,
+    signBusinessAccessToken,
     signRefreshToken,
     verifyRefreshToken,
     hashToken,
@@ -14,7 +15,7 @@ import {
     verifyPasswordResetToken,
     AccessTokenPayload,
 } from "../helper/tokenHelper";
-//import { sendOtpEmail, sendpasswordchnagedemail } from "../email";
+import { sendOtpEmail, sendPasswordChangedEmail } from "../email/authEmail";
 
 
 
@@ -96,6 +97,30 @@ const issueTokenPair = async (user: User, meta: RequestMeta) => {
     };
 };
 
+
+
+const issueBizTokenPair = async (user: User, meta: RequestMeta, business: vendorBusiness) => {
+        const access = signBusinessAccessToken({id: user.id, email: user.email, role: user.role, businessId: business.userId } );
+        const refresh = signRefreshToken(user.id);
+        await RefreshToken.create({
+        userId: user.id,
+        tokenHash: hashToken(refresh.token),
+        expiresAt: refresh.expiresAt,
+        userAgent: meta.userAgent ?? null,
+        ipAddress: meta.ipAddress ?? null,
+        
+    });
+    return { accessToken: access.token,   
+        refreshToken: refresh.token,
+        accessTokenExpiresAt: access.expiresAt,
+        refreshTokenExpiresAt: refresh.expiresAt
+    };
+};
+
+
+
+
+
 export const registerUser = async (input: { firstName: string; lastName: string; address: string; email: string; password: string;}) => {
 
     const existing = await User.findOne({ where: { email: input.email } });
@@ -111,12 +136,12 @@ export const registerUser = async (input: { firstName: string; lastName: string;
         
         const code = await issueOtp(existing.id, "email_verification");
         logger.info(`Use this for your OTP Code ${code}`)
-        // await sendOtpEmail({
-        //     to: existing.email,
-        //     firstName: existing.firstName,
-        //     code,
-        //     purpose: "email_verification", 
-        // });
+        await sendOtpEmail({
+            to: existing.email,
+            firstName: existing.firstName,
+            code,
+            purpose: "email_verification", 
+        });
         return existing?.toSafeJSON()
     };
 
@@ -130,12 +155,12 @@ export const registerUser = async (input: { firstName: string; lastName: string;
 
 const code = await issueOtp(user.id, "email_verification");
 logger.info(`Use this for your OTP Code ${code}`)
-// await sendOtpEmail({
-//     to: user.email,
-//     firstName: user.firstName,
-//     code,
-//     purpose: "email_verification",
-// });
+await sendOtpEmail({
+    to: user.email,
+    firstName: user.firstName,
+    code,
+    purpose: "email_verification",
+});
 
 return user.toSafeJSON();
 };
@@ -151,6 +176,18 @@ export const loginUser = async (input: { email: string; password: string }, meta
     if (!user.isEmailVerified) {
         throw ApiError.unauthorized("Email is not verified. Please verify your email before logging in.");
     }
+
+    if (user.role === "vendor"){
+        
+        const business = await vendorBusiness.findOne( { where: {
+            userId: user.id
+        }}) as vendorBusiness;
+        const biztokens = await issueBizTokenPair(user, meta, business);
+        user.lastLoginAt = new Date();
+        await user.save();
+        return { user: user.toSafeJSON(), ...biztokens };
+
+        }
 
     const tokens = await issueTokenPair(user, meta);
 
@@ -191,12 +228,12 @@ export const verifyOtp = async (input: { email: string; code: string, purpose: O
         await assertOtpCoolDown(user.id, input.purpose);
         const code = await issueOtp(user.id, input.purpose);
         logger.info(`Use this for your OPT Code ${code}`)
-        // await sendOtpEmail({
-        //     to: user.email,
-        //     firstName: user.firstName,
-        //     code,
-        //     purpose: input.purpose,
-        // });
+        await sendOtpEmail({
+            to: user.email,
+            firstName: user.firstName,
+            code,
+            purpose: input.purpose,
+        });
     } 
 };
 
@@ -206,7 +243,7 @@ export const forgotPassword = async (email: string): Promise<void> => {
 
     await assertOtpCoolDown(user.id, "password_reset");
     const code = await issueOtp(user.id, "password_reset");
-   // await sendOtpEmail({to: user.email, firstName: user.firstName, code, purpose: "password_reset"});
+    await sendOtpEmail({to: user.email, firstName: user.firstName, code, purpose: "password_reset"});
 };
 
 export const resetPassword = async (input: {resetToken: string, newPassword: string }):Promise<void> => {
@@ -231,7 +268,7 @@ export const resetPassword = async (input: {resetToken: string, newPassword: str
     await user.save();
 
     await RefreshToken.update({ revokedAt: new Date()}, { where: {userId: user.id, revokedAt: null}});
-   // await sendPasswordChangedEmail({ to: user.email, firstName: user.firstName});
+    await sendPasswordChangedEmail({ to: user.email, firstName: user.firstName});
 };
 
 export const refreshTokens =  async (rawRefreshToken: string, meta: RequestMeta) => {

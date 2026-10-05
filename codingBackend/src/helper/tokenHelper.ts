@@ -11,6 +11,7 @@ export interface AccessTokenPayload {
     jti: string;
     iat?: number;
     exp?: number;
+    businessId?: string;
 }
 
 export interface RefreshTokenPayload {
@@ -66,6 +67,17 @@ export const signAccessToken = (user: {id: string; email: string; role: UserRole
 
     return {token, jti, expiresAt: decodeExpiry(token)};
 };
+
+export const signBusinessAccessToken = (user: {id: string; email: string; role: UserRole, businessId: string}): IssuedAccessToken=>{
+    const jti = uuidv4();
+    const payload: AccessTokenPayload = {sub: user.id, email: user.email, role: user.role, businessId: user.businessId, jti};
+    const token = jwt.sign(payload, config.jwt.accesssecret, {
+        expiresIn: config.jwt.refreshexpiresIn,
+    } as SignOptions);
+
+    return {token, jti, expiresAt: decodeExpiry(token)};
+};
+
 
 export const verifyAccessToken = (token: string): AccessTokenPayload =>
     jwt.verify(token, config.jwt.accesssecret) as AccessTokenPayload;

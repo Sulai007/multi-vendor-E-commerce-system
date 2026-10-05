@@ -5,16 +5,17 @@ import swaggerUi from 'swagger-ui-express';
 import {config} from "./config/env";
 import {connectDB, sequelize } from "./config/db";
 import "./models";
-// import {verifyMailerConnection} from "./config/mailer";
+import {verifyMailerConnection} from "./config/mailer";
 import { logger } from "./utils/logger";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.middleware";
 import authRoutes from "./routes/auth.routes";
-import logRoutes from "./routes/log.routes";
+import adminRoutes from "./routes/admin.routes";
 import vendorRoutes from "./routes/vendorRoute";
+import customerRoutes from "./routes/customerRoute";
 import {swaggerSpec} from './docs/swagger'
 import { SequelizeTransport } from "./utils/sequelizeTransport";
-import { apiLogs } from "./models/triggeredApi";
 import { endPointLogger } from "./middleware/triggeredEndpoint";
+//import redis from "./config/redis"
 
 const app = express();
 
@@ -41,8 +42,9 @@ app.get("/", (_req: Request, res: Response) => {
 
 
 app.use("/api/auth", authRoutes);
-app.use("/api/logs", logRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/business", vendorRoutes);
+app.use("/api/customer", customerRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -51,7 +53,8 @@ let server: ReturnType<typeof app.listen>;
 const start = async (): Promise<void> => {
     await connectDB();
     logger.add(new SequelizeTransport({ logModel: sequelize.models.apiLogs }) as any );
-    // await verifyMailerConnection();
+     //await verifyMailerConnection();
+     //await redis.connect();
 
     server = app.listen(config.port, ()=> {
         logger.info(`Server is running on http://localhost:${config.port}`)

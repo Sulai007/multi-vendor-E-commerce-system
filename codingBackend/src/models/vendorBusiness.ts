@@ -10,7 +10,7 @@ export class vendorBusiness extends Model<InferAttributes<vendorBusiness>,
     declare userId: string;
     declare businessName: string;
     declare description: string;
-    declare products?: product[];
+    //declare products?: product[];
     declare readonly createdAt: CreationOptional<Date>;
     declare readonly updatedAt: CreationOptional<Date>;
 }

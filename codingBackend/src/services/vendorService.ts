@@ -2,8 +2,9 @@ import { ApiError } from "../utils/apiError";
 import { logger } from "../utils/logger";
 import { uploadImageToCloudinary } from "../helper/fileUpolad";
 import { config } from "../config/env";
-import {product, vendorBusiness, User} from "../models";
+import {product, vendorBusiness, User, Order, OrderItem} from "../models";
 import { productData, businessData, businessUpdateData, productUpdateData } from "../types/businessTypes";
+import { itemStatus } from "../models/orderItem";
 
 
 export const createBusiness = async (data: businessData, email: string): Promise<object> => {
@@ -154,3 +155,31 @@ export const deleteProduct = async(productId: string, businessId: string): Promi
         throw ApiError.internalServerError("deleting failed", error)
     }
 };
+
+export const getOrderByStatus = async(businessId: string, status: string): Promise<OrderItem[] | null> => {
+      const orders = await OrderItem.findAll({ where: {
+        businessId: businessId,
+        itemStatus: status
+      }})
+
+      return orders;
+};
+
+export const updateOrderStatus = async(itemId: string, businessId: string, status: itemStatus) =>
+{
+    const order = await OrderItem.findOne({
+        where:
+        {
+            id: itemId,
+            businessId: businessId,
+
+        }
+    })
+    if(!order){
+        throw new ApiError(404, "order not found")
+    }
+
+    await order?.update("itemStatus", status)
+
+    return "update successful";
+}

@@ -9,6 +9,8 @@ import { product } from "./product"
 import { vendorBusiness } from "./vendorBusiness"
 import { Order } from "./order";
 import { OrderItem } from "./orderItem";
+import { Category } from "./productCategory"
+import { Idempotency } from "./idempotency"
 
 User.hasMany(Otp, {foreignKey: "userId", as: "otps"});
 Otp.belongsTo(User, {foreignKey: "userId", as: "user"});
@@ -38,6 +40,10 @@ product.hasMany(OrderItem, { foreignKey: "productId"})
 OrderItem.belongsTo(product, { foreignKey: "productId"})
 
 
-export {sequelize, User, Otp, RefreshToken, BlacklistedToken, apiLogs, appSetting, product, vendorBusiness, Order, OrderItem};
+Category.belongsToMany( product, { through: "ProductCategory", foreignKey: "categoryId", as: "products" });
+product.belongsToMany( Category, { through: "ProductCategory", foreignKey: "productId", as: "categories" });
+
+
+export {sequelize, User, Otp, RefreshToken, BlacklistedToken, apiLogs, appSetting, product, vendorBusiness, Order, OrderItem, Category, Idempotency};
 export type {UserRole} from"./User";
 export type { OtpPurpose } from "./otp"

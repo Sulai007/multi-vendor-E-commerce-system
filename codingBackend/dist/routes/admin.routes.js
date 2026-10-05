@@ -1,15 +1,48 @@
-import { Router } from "express";
-import * as logController from "../controllers/logController";
-import { authenticate, authorize } from "../middleware/auth.middleware";
-import { requirePassword } from "../middleware/requirePassword";
-
-const router = Router();
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const logController = __importStar(require("../controllers/logController"));
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const requirePassword_1 = require("../middleware/requirePassword");
+const router = (0, express_1.Router)();
 /**
  * @swagger
- * /api/logs:
+ * /api/admin/logs:
  *   post:
- *     tags: [Log]
+ *     tags: [Admin]
  *     summary: Retrieve API request logs
  *     description: Returns API request logs for administrators after validating the administrator password. Logs are ordered from newest to oldest.
  *     security:
@@ -69,12 +102,11 @@ const router = Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
  */
-router.post("/", authenticate, authorize("admin"), requirePassword, logController.getApiLogs);
-router.post("/getlogs", authenticate, authorize("admin"), requirePassword, logController.getApiLogs);
-
+router.post("/", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), requirePassword_1.requirePassword, logController.getApiLogs);
+router.post("/getlogs", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), requirePassword_1.requirePassword, logController.getApiLogs);
 /**
  * @swagger
- * /api/logs/accessPassword:
+ * /api/admin/logs/accessPassword:
  *   post:
  *     tags: [Log]
  *     summary: Verify administrator access
@@ -108,7 +140,5 @@ router.post("/getlogs", authenticate, authorize("admin"), requirePassword, logCo
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
  */
-router.post("/accessPassword", authenticate, authorize("admin"), logController.updatePassword);
-
-export default router;
-
+router.post("/accessPassword", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.updatePassword);
+exports.default = router;

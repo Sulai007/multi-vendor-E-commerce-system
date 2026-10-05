@@ -107,3 +107,21 @@ export const deleteProduct = catchAsync(
             }
         )
     });
+
+export const getOrderByStatus = catchAsync( async ( req: Request, res: Response) => {
+    const status = req.query.status as string;
+    const id = req.params.businessId as string;
+
+const products =  await vendorService.getOrderByStatus(id, status)
+sendSuccess(res,
+    {
+        statusCode: 200,
+        message: "products fetched successfully",
+        data: products
+    }
+)
+});
+
+export const updateOrderStatus = catchAsync( async (req: Request, res: Response) => {
+    const id = req.params.businessId
+})

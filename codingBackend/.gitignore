@@ -1,4 +1,6 @@
 .env
 node_modules
-React-app
-react-frontend
+/React-app
+/react-frontend
+/logs
+/dist

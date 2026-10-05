@@ -53,6 +53,8 @@ const envSchema = z.object(
         CLOUDINARY_CLOUD_NAME: z.string().min(1, "CLOUDINARY_CLOUD_NAME is required"),
         CLOUDINARY_API_KEY: z.string().min(1, "CLOUDINARY_API_KEY is required"),
         CLOUDINARY_API_SECRET: z.string().min(1, "CLOUDINARY_API_SECRET is required"),
+
+        // REDIS_URL: z.string().min(1, "REDIS_URL is required"),
     }
 );
 
@@ -115,6 +117,10 @@ export const config = {
         apiKey: env.CLOUDINARY_API_KEY,
         apiSecret: env.CLOUDINARY_API_SECRET,
     },
+
+    // redis: {
+    //     url: env.REDIS_URL,
+    // },
 } as const;
 
 export type AppConfig = typeof config;

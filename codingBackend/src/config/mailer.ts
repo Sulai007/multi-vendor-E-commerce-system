@@ -2,7 +2,7 @@ import nodemailer, { Transporter } from "nodemailer";
 import { config } from "./env";
 import { logger } from "../utils/logger";
 
-const transporter: Transporter = nodemailer.createTransport({
+export const transporter: Transporter = nodemailer.createTransport({
     host: config.smtp.host,
     port: config.smtp.port,
     secure: config.smtp.secure,
