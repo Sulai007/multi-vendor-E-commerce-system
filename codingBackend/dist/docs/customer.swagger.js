@@ -8,6 +8,13 @@
  *     description: Returns all vendor businesses available to customers.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
  *     responses:
  *       '202':
  *         description: Businesses retrieved successfully
@@ -22,6 +29,8 @@
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/CustomerBusiness'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       '401':
  *         description: Authentication required
  *         content:
@@ -79,6 +88,47 @@
  */
 /**
  * @swagger
+ * /api/customer/search-products:
+ *   get:
+ *     tags: [Customer]
+ *     summary: Search for products
+ *     description: Finds products whose name or description contains the search text.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema: { type: string, minLength: 1, example: rice }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
+ *     responses:
+ *       '200':
+ *         description: Matching products retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean, example: true }
+ *                 message: { type: string }
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/CustomerProduct' }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
+ *       '400':
+ *         description: Search text is required
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ */
+/**
+ * @swagger
  * /api/customer/{businessId}/products:
  *   get:
  *     tags: [Customer]
@@ -94,6 +144,12 @@
  *         schema:
  *           type: string
  *           format: uuid
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
  *     responses:
  *       '202':
  *         description: Business products fetched successfully
@@ -108,6 +164,8 @@
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/CustomerProduct'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       '400':
  *         description: Invalid business ID
  *         content:
@@ -172,6 +230,45 @@
  */
 /**
  * @swagger
+ * /api/customer/category/{categoryId}/products:
+ *   get:
+ *     tags: [Customer]
+ *     summary: List products in a category
+ *     description: Returns a paginated list of products assigned to the specified category.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: categoryId
+ *         in: path
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
+ *     responses:
+ *       '200':
+ *         description: Category products retrieved
+ *       '400':
+ *         description: Invalid category ID or pagination parameters
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '401':
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '404':
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ */
+/**
+ * @swagger
  * /api/customer/create-order:
  *   post:
  *     tags: [Customer]
@@ -179,6 +276,8 @@
  *     description: Creates an order for the authenticated customer from one or more products.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/IdempotencyKey'
  *     requestBody:
  *       required: true
  *       content:
@@ -217,6 +316,90 @@
  */
 /**
  * @swagger
+ * /api/customer/orders/{orderId}/cancel:
+ *   patch:
+ *     tags: [Customer]
+ *     summary: Cancel an order
+ *     description: Cancels an eligible order owned by the authenticated customer. The optional reason is stored with the cancellation.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: orderId
+ *         in: path
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - $ref: '#/components/parameters/IdempotencyKey'
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason: { type: string, maxLength: 500, example: Changed my mind }
+ *     responses:
+ *       '200':
+ *         description: Order cancelled
+ *       '400':
+ *         description: Order cannot be cancelled in its current state
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '401':
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '404':
+ *         description: Order not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ */
+/**
+ * @swagger
+ * /api/customer/order-items/{orderItemId}/refund-requests:
+ *   post:
+ *     tags: [Customer]
+ *     summary: Request a refund for an order item
+ *     description: Creates a refund request with the customer's reason and moves the item refund status to requested.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: orderItemId
+ *         in: path
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - $ref: '#/components/parameters/IdempotencyKey'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [reasonNote]
+ *             properties:
+ *               reasonNote: { type: string, minLength: 1, maxLength: 1000, example: Item arrived damaged }
+ *     responses:
+ *       '201':
+ *         description: Refund request created
+ *       '400':
+ *         description: Invalid reason or item is not eligible for a refund request
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '401':
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ *       '404':
+ *         description: Order item not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
+ */
+/**
+ * @swagger
  * /api/customer/{orderid}/{prodId}/add-to-order:
  *   post:
  *     tags: [Customer]
@@ -239,6 +422,7 @@
  *         schema:
  *           type: string
  *           format: uuid
+ *       - $ref: '#/components/parameters/IdempotencyKey'
  *     requestBody:
  *       required: true
  *       content:
@@ -297,6 +481,9 @@
  *         description: { type: string, example: Premium long-grain rice }
  *         price: { type: number, format: float, example: 25.99 }
  *         quantity: { type: integer, example: 50 }
+ *         categoryNames:
+ *           type: array
+ *           items: { type: string }
  *         imageUrl: { type: string, format: uri, nullable: true }
  *         createdAt: { type: string, format: date-time }
  *         updatedAt: { type: string, format: date-time }

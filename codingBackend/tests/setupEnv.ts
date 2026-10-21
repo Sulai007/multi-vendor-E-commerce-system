@@ -1,0 +1,15 @@
+process.env.NODE_ENV = "test";
+process.env.DB_HOST = "localhost";
+process.env.DB_NAME = "test";
+process.env.DB_USER = "test";
+process.env.DB_PASSWORD = "test";
+process.env.JWT_ACCESS_SECRET = "test-access-secret-at-least-16";
+process.env.JWT_REFRESH_SECRET = "test-refresh-secret-at-least-16";
+process.env.JWT_RESET_SECRET = "test-reset-secret-at-least-16";
+process.env.SMTP_HOST = "localhost";
+process.env.SMTP_USER = "test";
+process.env.SMTP_PASSWORD = "test";
+process.env.MAIL_FROM_ADDRESS = "test@example.com";
+process.env.CLOUDINARY_CLOUD_NAME = "test";
+process.env.CLOUDINARY_API_KEY = "test";
+process.env.CLOUDINARY_API_SECRET = "test";

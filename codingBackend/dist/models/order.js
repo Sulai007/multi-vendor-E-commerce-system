@@ -23,7 +23,7 @@ Order.init({
         defaultValue: 0.00,
     },
     orderStatus: {
-        type: sequelize_1.DataTypes.ENUM("pending", "processed", "shipped", "delivered"),
+        type: sequelize_1.DataTypes.ENUM("pending", "processed", "shipped", "delivered", "cancelled"),
         allowNull: false,
         defaultValue: "pending"
     },
@@ -35,6 +35,19 @@ Order.init({
     shippingAddress: {
         type: sequelize_1.DataTypes.STRING(256),
         allowNull: false,
+    },
+    isCancelled: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
+    cancelledAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: true,
+    },
+    cancelReason: {
+        type: sequelize_1.DataTypes.STRING(500),
+        allowNull: true,
     },
     createdAt: sequelize_1.DataTypes.DATE(),
     updatedAt: sequelize_1.DataTypes.DATE()

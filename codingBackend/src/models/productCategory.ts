@@ -1,21 +1,22 @@
-import { Model, InferAttributes, CreationAttributes, InferCreationAttributes, DataTypes } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../config/db";
 
 export class Category extends Model<InferAttributes<Category>, InferCreationAttributes<Category>> {
-  declare id: string;
+  declare id: CreationOptional<string>;
   declare category: string;
 }
 
 Category.init(
   {
     id: {
-      type: DataTypes.STRING,
-      defaultValue: DataTypes.UUID,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
     category: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     }
   },
   {

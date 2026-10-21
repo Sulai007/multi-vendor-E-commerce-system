@@ -15,7 +15,8 @@ import {
     verifyPasswordResetToken,
     AccessTokenPayload,
 } from "../helper/tokenHelper";
-import { sendOtpEmail, sendPasswordChangedEmail } from "../email/authEmail";
+import { sendOtpEmail, sendPasswordChangedEmail, sendWelcomeEmail } from "../email/authEmail";
+import { sendEmailSafely } from "../email/mailDelivery";
 
 
 
@@ -135,7 +136,6 @@ export const registerUser = async (input: { firstName: string; lastName: string;
         await existing.save();
         
         const code = await issueOtp(existing.id, "email_verification");
-        logger.info(`Use this for your OTP Code ${code}`)
         await sendOtpEmail({
             to: existing.email,
             firstName: existing.firstName,
@@ -154,13 +154,14 @@ export const registerUser = async (input: { firstName: string; lastName: string;
 });
 
 const code = await issueOtp(user.id, "email_verification");
-logger.info(`Use this for your OTP Code ${code}`)
-await sendOtpEmail({
-    to: user.email,
-    firstName: user.firstName,
-    code,
-    purpose: "email_verification",
-});
+// await sendOtpEmail({
+//     to: user.email,
+//     firstName: user.firstName,
+//     code,
+//     purpose: "email_verification",
+// });
+
+console.log(`OTP for ${user.email}: ${code}`); // Log the OTP to the console for testing purposes
 
 return user.toSafeJSON();
 };
@@ -206,6 +207,7 @@ export const verifyOtp = async (input: { email: string; code: string, purpose: O
     if (input.purpose === "email_verification") {
         user.isEmailVerified = true;
         await user.save();
+        await sendEmailSafely(() => sendWelcomeEmail({ to: user.email, firstName: user.firstName }));
         return { type: "email_verified" as const, user: user.toSafeJSON() };
     }
 
@@ -221,20 +223,19 @@ export const verifyOtp = async (input: { email: string; code: string, purpose: O
         }
         if (user.isEmailVerified) {
             throw ApiError.badRequest("Email is already verified.");
-        } else if (!user){
-            return;
         }
+    } else if (!user) {
+        return;
+    }
 
-        await assertOtpCoolDown(user.id, input.purpose);
-        const code = await issueOtp(user.id, input.purpose);
-        logger.info(`Use this for your OPT Code ${code}`)
-        await sendOtpEmail({
-            to: user.email,
-            firstName: user.firstName,
-            code,
-            purpose: input.purpose,
-        });
-    } 
+    await assertOtpCoolDown(user.id, input.purpose);
+    const code = await issueOtp(user.id, input.purpose);
+    await sendOtpEmail({
+        to: user.email,
+        firstName: user.firstName,
+        code,
+        purpose: input.purpose,
+    });
 };
 
 export const forgotPassword = async (email: string): Promise<void> => {
@@ -268,7 +269,7 @@ export const resetPassword = async (input: {resetToken: string, newPassword: str
     await user.save();
 
     await RefreshToken.update({ revokedAt: new Date()}, { where: {userId: user.id, revokedAt: null}});
-    await sendPasswordChangedEmail({ to: user.email, firstName: user.firstName});
+    await sendEmailSafely(() => sendPasswordChangedEmail({ to: user.email, firstName: user.firstName }));
 };
 
 export const refreshTokens =  async (rawRefreshToken: string, meta: RequestMeta) => {
@@ -321,6 +322,14 @@ export const refreshTokens =  async (rawRefreshToken: string, meta: RequestMeta)
 };
 
 
+export const getProfile = async (userId: string) => {
+    const user = await User.findByPk(userId);
+    if (!user) {
+        throw ApiError.notFound("User not found");
+    }
+    return user.toSafeJSON();
+};
+
 export const logOutUser = async (
     rawRefreshToken: string,
     accessTokenPayload: AccessTokenPayload
@@ -340,7 +349,7 @@ export const logOutUser = async (
     }
 };
                                                                                                                                                         
-export const getProfile = async (userId: string) => {
+export const _ = async (userId: string) => {
     const user =  await User.findByPk(userId);
     if (!user){
         throw ApiError.notFound("User not found");

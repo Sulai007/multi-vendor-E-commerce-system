@@ -3,6 +3,7 @@ export interface productData {
     description: string;
     price: number;
     quantity: number;
+    categoryIds?: string[];
     file: Express.Multer.File;
 }
 
@@ -17,6 +18,7 @@ export interface productUpdateData {
     description?: string;
     price?: number;
     quantity?: number;
+    categoryIds?: string[];
 }
 
 export interface businessData {

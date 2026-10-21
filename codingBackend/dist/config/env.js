@@ -43,7 +43,7 @@ const envSchema = zod_1.z.object({
     CLOUDINARY_CLOUD_NAME: zod_1.z.string().min(1, "CLOUDINARY_CLOUD_NAME is required"),
     CLOUDINARY_API_KEY: zod_1.z.string().min(1, "CLOUDINARY_API_KEY is required"),
     CLOUDINARY_API_SECRET: zod_1.z.string().min(1, "CLOUDINARY_API_SECRET is required"),
-    // REDIS_URL: z.string().min(1, "REDIS_URL is required"),
+    REDIS_URL: zod_1.z.string().min(1, "REDIS_URL is required"),
 });
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {
@@ -101,7 +101,7 @@ exports.config = {
         apiKey: env.CLOUDINARY_API_KEY,
         apiSecret: env.CLOUDINARY_API_SECRET,
     },
-    // redis: {
-    //     url: env.REDIS_URL,
-    // },
+    redis: {
+        url: env.REDIS_URL,
+    },
 };

@@ -8,12 +8,13 @@ export const getBusinesses =
 catchAsync(
                 async (req: Request, res: Response) =>
                     {
-            const businesses = await customerService.getBusinesses()
+            const result = await customerService.getBusinesses(req.query.page, req.query.limit)
             sendSuccess(
                 res,{
                 statusCode: 202,
                 message: "Businesses retrieved successfulyy",
-                data: businesses
+                data: result.items,
+                pagination: result.pagination,
                 });
 
 
@@ -39,19 +40,49 @@ catchAsync(
 export const getBusinessProducts = catchAsync(
 async(req: Request, res: Response) => {
     const id = req.params.businessId as string
-    const businessProducts = await customerService.getBusinessProducts(id)
+    const result = await customerService.getBusinessProducts(id, req.query.page, req.query.limit)
 
     sendSuccess(
         res,
         {
             statusCode: 202,
                 message: "Business Products fetched successfully",
-                data: businessProducts
+                data: result.items,
+                pagination: result.pagination,
         }
     )
 }
 
 );
+
+export const getProductsByCategory = catchAsync(async(req: Request, res: Response) => {
+    const result = await customerService.getProductsByCategory(
+        req.params.categoryId as string,
+        req.query.page,
+        req.query.limit
+    );
+
+    sendSuccess(res, {
+        statusCode: 200,
+        message: "Category products fetched successfully",
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
+
+export const searchProducts = catchAsync(async (req: Request, res: Response) => {
+    const result = await customerService.searchProducts(
+        (req.query.q as string).trim(),
+        req.query.page,
+        req.query.limit
+    );
+
+    sendSuccess(res, {
+        message: "Products found successfully",
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
 
 export const getBusinessProductById = catchAsync(
     async(req: Request, res: Response) => {
@@ -93,7 +124,7 @@ export const addToOrder = catchAsync(
         const orderId = req.params.orderid as string;
         const prodId =  req.params.prodId as string;
 
-        const qty = req.body
+        const qty = Number(req.body.qty);
 
         const item = await customerService.addOrderItem(orderId, prodId, qty)
         sendSuccess(
@@ -107,5 +138,33 @@ export const addToOrder = catchAsync(
 
     }
 )
+
+export const requestRefund = catchAsync(async(req: Request, res: Response) => {
+    const result = await customerService.requestRefund(
+        req.user?.sub as string,
+        req.params.orderItemId as string,
+        req.body.reasonNote
+    );
+
+    sendSuccess(res, {
+        statusCode: 201,
+        message: "Refund requested successfully",
+        data: result,
+    });
+});
+
+export const cancelOrder = catchAsync(async(req: Request, res: Response) => {
+    const order = await customerService.cancelOrder(
+        req.params.orderId as string,
+        req.user?.sub as string,
+        req.body.reason
+    );
+
+    sendSuccess(res, {
+        statusCode: 200,
+        message: "Order cancelled successfully",
+        data: order,
+    });
+});
 
 

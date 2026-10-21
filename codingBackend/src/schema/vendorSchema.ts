@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { paginationQuerySchema } from "./paginationSchema";
 
 const uuidField = z.string().trim().uuid("A valid ID is required");
 
@@ -63,12 +64,55 @@ export const addProductSchema = z.object({
     description: productDescriptionField,
     price: z.coerce.number().positive("Price must be greater than 0"),
     quantity: z.coerce.number().int("Quantity must be an integer").min(1, "Quantity must be at least 1"),
+    categoryIds: z.preprocess(
+      (value) => typeof value === "string" ? value.split(",").map((id) => id.trim()).filter(Boolean) : value,
+      z.array(uuidField).optional()
+    ),
   }),
 });
 
 export const getBusinessProductsSchema = z.object({
   params: z.object({
     businessId: uuidField,
+  }),
+  query: paginationQuerySchema,
+});
+
+export const getBusinessOrdersSchema = z.object({
+  params: z.object({
+    businessId: uuidField,
+  }),
+  query: paginationQuerySchema.extend({
+    status: z.enum(["pending", "shipped", "delivered"]).optional(),
+  }),
+});
+
+export const getRefundRequestsSchema = z.object({
+  params: z.object({
+    businessId: uuidField,
+  }),
+  query: paginationQuerySchema.extend({
+    status: z.enum(["requested", "processing", "refunded", "rejected"]).optional(),
+  }),
+});
+
+export const updateRefundStatusSchema = z.object({
+  params: z.object({
+    businessId: uuidField,
+    refundRequestId: uuidField,
+  }),
+  body: z.object({
+    status: z.enum(["processing", "escalated", "refunded", "rejected"]),
+  }),
+});
+
+export const updateOrderStatusSchema = z.object({
+  params: z.object({
+    businessId: uuidField,
+    itemId: uuidField,
+  }),
+  body: z.object({
+    status: z.enum(["pending", "shipped", "delivered"]),
   }),
 });
 
@@ -87,8 +131,12 @@ export const updateProductSchema = z.object({
         .int("Quantity must be an integer")
         .min(1, "Quantity must be at least 1")
         .optional(),
+      categoryIds: z.preprocess(
+        (value) => typeof value === "string" ? value.split(",").map((id) => id.trim()).filter(Boolean) : value,
+        z.array(uuidField).optional()
+      ),
     })
-    .refine((data) => data.name || data.description || data.price !== undefined || data.quantity !== undefined, {
+    .refine((data) => data.name || data.description || data.price !== undefined || data.quantity !== undefined || data.categoryIds !== undefined, {
       message: "At least one product field must be provided for update",
       path: ["name"],
     }),

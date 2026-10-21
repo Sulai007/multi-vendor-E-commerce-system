@@ -1,5 +1,7 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from "sequelize";
 import { sequelize } from "../config/db";
+import type { ProductStatus } from "../types/lifecycle";
+import { Category } from "./productCategory";
 
 
 export class product extends Model<InferAttributes<product>,
@@ -13,6 +15,9 @@ export class product extends Model<InferAttributes<product>,
     declare quantity: number;
     declare imageUrl: string;
     declare  imagePublicId: string;
+    declare categoryNames: CreationOptional<string[]>;
+    declare status: CreationOptional<ProductStatus>;
+    declare setCategories: NonAttribute<(categories: Category[]) => Promise<void>>;
     declare readonly createdAt: CreationOptional<Date>;
     declare readonly updatedAt: CreationOptional<Date>;
 }
@@ -54,6 +59,16 @@ product.init(
         imagePublicId: {
              type: DataTypes.STRING(255),
             allowNull: true,
+        },
+        categoryNames: {
+            type: DataTypes.ARRAY(DataTypes.STRING(255)),
+            allowNull: false,
+            defaultValue: [],
+        },
+        status: {
+            type: DataTypes.ENUM("active", "hidden", "archived"),
+            allowNull: false,
+            defaultValue: "active",
         },
        
         createdAt: DataTypes.DATE,

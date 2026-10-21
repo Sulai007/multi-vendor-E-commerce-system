@@ -33,16 +33,17 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addToOrder = exports.createOrder = exports.getBusinessProductById = exports.getBusinessProducts = exports.getBusinessById = exports.getBusinesses = void 0;
+exports.cancelOrder = exports.requestRefund = exports.addToOrder = exports.createOrder = exports.getBusinessProductById = exports.searchProducts = exports.getProductsByCategory = exports.getBusinessProducts = exports.getBusinessById = exports.getBusinesses = void 0;
 const apiResponse_1 = require("../utils/apiResponse");
 const catchAsync_1 = require("../utils/catchAsync");
 const customerService = __importStar(require("../services/customerService"));
 exports.getBusinesses = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const businesses = await customerService.getBusinesses();
+    const result = await customerService.getBusinesses(req.query.page, req.query.limit);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 202,
         message: "Businesses retrieved successfulyy",
-        data: businesses
+        data: result.items,
+        pagination: result.pagination,
     });
 });
 exports.getBusinessById = (0, catchAsync_1.catchAsync)(async (req, res) => {
@@ -56,11 +57,29 @@ exports.getBusinessById = (0, catchAsync_1.catchAsync)(async (req, res) => {
 });
 exports.getBusinessProducts = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const id = req.params.businessId;
-    const businessProducts = await customerService.getBusinessProducts(id);
+    const result = await customerService.getBusinessProducts(id, req.query.page, req.query.limit);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 202,
         message: "Business Products fetched successfully",
-        data: businessProducts
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
+exports.getProductsByCategory = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await customerService.getProductsByCategory(req.params.categoryId, req.query.page, req.query.limit);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 200,
+        message: "Category products fetched successfully",
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
+exports.searchProducts = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await customerService.searchProducts(req.query.q.trim(), req.query.page, req.query.limit);
+    (0, apiResponse_1.sendSuccess)(res, {
+        message: "Products found successfully",
+        data: result.items,
+        pagination: result.pagination,
     });
 });
 exports.getBusinessProductById = (0, catchAsync_1.catchAsync)(async (req, res) => {
@@ -86,11 +105,27 @@ exports.createOrder = (0, catchAsync_1.catchAsync)(async (req, res) => {
 exports.addToOrder = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const orderId = req.params.orderid;
     const prodId = req.params.prodId;
-    const qty = req.body;
+    const qty = Number(req.body.qty);
     const item = await customerService.addOrderItem(orderId, prodId, qty);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 200,
         message: "item successfully added to Order",
         data: item
+    });
+});
+exports.requestRefund = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await customerService.requestRefund(req.user?.sub, req.params.orderItemId, req.body.reasonNote);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 201,
+        message: "Refund requested successfully",
+        data: result,
+    });
+});
+exports.cancelOrder = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const order = await customerService.cancelOrder(req.params.orderId, req.user?.sub, req.body.reason);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 200,
+        message: "Order cancelled successfully",
+        data: order,
     });
 });

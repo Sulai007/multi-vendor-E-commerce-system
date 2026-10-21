@@ -8,13 +8,14 @@ class Category extends sequelize_1.Model {
 exports.Category = Category;
 Category.init({
     id: {
-        type: sequelize_1.DataTypes.STRING,
-        defaultValue: sequelize_1.DataTypes.UUID,
+        type: sequelize_1.DataTypes.UUID,
+        defaultValue: sequelize_1.DataTypes.UUIDV4,
         primaryKey: true
     },
     category: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, {
     sequelize: db_1.sequelize,

@@ -1,7 +1,8 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../config/db";
+import type { UserRole } from "../types/lifecycle";
 
-export type UserRole = "user" | "admin" | "vendor";
+export type { UserRole } from "../types/lifecycle";
 
 export class 
 User extends Model<InferAttributes<User>,

@@ -4,18 +4,25 @@ exports.updatePassword = exports.getApiLogs = void 0;
 const triggeredApi_1 = require("../models/triggeredApi");
 const passwordHelper_1 = require("../helper/passwordHelper");
 const models_1 = require("../models");
-const getApiLogs = async () => {
-    const logs = await triggeredApi_1.apiLogs.findAll({
-        order: [["createdAt", "DESC"]]
+const pagination_1 = require("../utils/pagination");
+const getApiLogs = async (pageValue, limitValue) => {
+    const { page, limit, offset } = (0, pagination_1.getPagination)(pageValue, limitValue);
+    const result = await triggeredApi_1.apiLogs.findAndCountAll({
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
     });
-    return logs.map(log => ({
-        id: log.id,
-        userId: log.userId,
-        method: log.method,
-        statusCode: log.statusCode,
-        ipAddress: log.ipAddress,
-        time: log.createdAt.toISOString(),
-    }));
+    return {
+        items: result.rows.map(log => ({
+            id: log.id,
+            userId: log.userId,
+            method: log.method,
+            statusCode: log.statusCode,
+            ipAddress: log.ipAddress,
+            time: log.createdAt.toISOString(),
+        })),
+        pagination: (0, pagination_1.getPaginationMetadata)(page, limit, result.count),
+    };
 };
 exports.getApiLogs = getApiLogs;
 const updatePassword = async (newPassword) => {

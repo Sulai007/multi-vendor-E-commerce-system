@@ -28,12 +28,13 @@ export const getBusinessProfile = catchAsync(async (req: Request, res: Response)
 
 
 export const updateBusiness = catchAsync(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const businessId = req.params.id as string;
+    const authenticatedUserId = req.user?.sub as string;
     const { businessName, description } = req.body;
     if (!businessName && !description) {
         throw new ApiError(400, "At least one field (businessName or description) must be provided for update");
     }
-    const updatedBusiness = await vendorService.updateBusiness(id, req.params.id as string, req.body);
+    const updatedBusiness = await vendorService.updateBusiness(authenticatedUserId, businessId, req.body);
     sendSuccess(res, {
         statusCode: 200,
         message: "Business updated successfully.",
@@ -47,16 +48,21 @@ export const getBusinessProducts = catchAsync(async (req: Request, res: Response
     // if (req.user?.role === "vendor" && req.user?.sub !== req.params.id) {
     //     throw new ApiError(403, "You are not authorized to fetch these products.");
     // }
-    const products = await vendorService.getBusinessProducts(req.params.businessId as string);
+    const result = await vendorService.getBusinessProducts(
+        req.params.businessId as string,
+        req.query.page,
+        req.query.limit
+    );
     sendSuccess(res, {
         statusCode: 200,
         message: "Vendor products fetched successfully.",
-        data: products,
+        data: result.items,
+        pagination: result.pagination,
     });
 });
 
 export const addProduct = catchAsync(async (req: Request, res: Response) => {
-    const { name, description, price, quantity} = req.body;
+    const { name, description, price, quantity, categoryIds} = req.body;
     const file = req.file
     if (!name || !description || !price || !quantity ) {
         throw new ApiError(400, "Missing required fields: name, description, price, quantity");
@@ -71,6 +77,7 @@ export const addProduct = catchAsync(async (req: Request, res: Response) => {
         description,
         price,
         quantity,
+        categoryIds,
         file
     }
     const product = await vendorService.addProduct(req.params.businessId as string, data);
@@ -109,19 +116,62 @@ export const deleteProduct = catchAsync(
     });
 
 export const getOrderByStatus = catchAsync( async ( req: Request, res: Response) => {
-    const status = req.query.status as string;
+    const status = req.query.status as string | undefined;
     const id = req.params.businessId as string;
 
-const products =  await vendorService.getOrderByStatus(id, status)
+const result = await vendorService.getOrderByStatus(id, status, req.query.page, req.query.limit)
 sendSuccess(res,
     {
         statusCode: 200,
         message: "products fetched successfully",
-        data: products
+        data: result.items,
+        pagination: result.pagination,
     }
 )
 });
 
 export const updateOrderStatus = catchAsync( async (req: Request, res: Response) => {
-    const id = req.params.businessId
+    const orderItem = await vendorService.updateOrderStatus(
+        req.params.itemId as string,
+        req.params.businessId as string,
+        req.body.status
+    );
+
+    sendSuccess(res, {
+        statusCode: 200,
+        message: "Order status updated successfully.",
+        data: orderItem,
+    });
 })
+
+export const getRefundRequests = catchAsync(async(req: Request, res: Response) => {
+    const result = await vendorService.getRefundRequests(
+        req.user?.sub as string,
+        req.params.businessId as string,
+        req.query.status as import("../models/orderItem").refundStatus | undefined,
+        req.query.page,
+        req.query.limit
+    );
+
+    sendSuccess(res, {
+        statusCode: 200,
+        message: "Refund requests fetched successfully",
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
+
+export const updateRefundStatus = catchAsync(async(req: Request, res: Response) => {
+    const result = await vendorService.updateRefundStatus(
+        req.user?.sub as string,
+        req.params.businessId as string,
+        req.params.refundRequestId as string,
+        req.body.status
+    );
+
+    sendSuccess(res, {
+        statusCode: 200,
+        message: "Refund status updated successfully",
+        data: result,
+    });
+});

@@ -43,6 +43,16 @@ product.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: true,
     },
+    categoryNames: {
+        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING(255)),
+        allowNull: false,
+        defaultValue: [],
+    },
+    status: {
+        type: sequelize_1.DataTypes.ENUM("active", "hidden", "archived"),
+        allowNull: false,
+        defaultValue: "active",
+    },
     createdAt: sequelize_1.DataTypes.DATE,
     updatedAt: sequelize_1.DataTypes.DATE,
 }, {

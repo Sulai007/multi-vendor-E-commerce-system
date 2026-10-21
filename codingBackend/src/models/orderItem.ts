@@ -1,8 +1,9 @@
 import { Model, DataTypes, InferCreationAttributes, CreationOptional, InferAttributes } from "sequelize"
 import { sequelize } from "../config/db"
+import type { ItemStatus, RefundStatus } from "../types/lifecycle"
 
-export type itemStatus = "pending" | "shipped" | "delivered" 
-export type refundStatus = "none" | "requested" | "processing" | "refunded" | "rejected"
+export type itemStatus = ItemStatus
+export type refundStatus = RefundStatus
 
 export class OrderItem extends Model<InferAttributes<OrderItem>, InferCreationAttributes<OrderItem>>{
     declare id:  CreationOptional<string>;
@@ -12,8 +13,8 @@ export class OrderItem extends Model<InferAttributes<OrderItem>, InferCreationAt
     declare name: string;
     declare quantity: number;
     declare unitPrice: number;
-    declare itemStatus: CreationOptional<itemStatus>
-    declare refundStatus: CreationOptional<refundStatus>
+    declare itemStatus: CreationOptional<ItemStatus>
+    declare refundStatus: CreationOptional<RefundStatus>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 }
@@ -70,7 +71,7 @@ OrderItem.init({
     },
     refundStatus:
     {
-        type: DataTypes.ENUM("none", "requested", "processing", "refunded", "rejected"),
+        type: DataTypes.ENUM("none", "requested", "processing", "escalated", "refunded", "rejected"),
         allowNull: false,
         defaultValue: "none"
     },

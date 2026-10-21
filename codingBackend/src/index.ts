@@ -15,7 +15,7 @@ import customerRoutes from "./routes/customerRoute";
 import {swaggerSpec} from './docs/swagger'
 import { SequelizeTransport } from "./utils/sequelizeTransport";
 import { endPointLogger } from "./middleware/triggeredEndpoint";
-//import redis from "./config/redis"
+import redis from "./config/redis"
 
 const app = express();
 
@@ -23,7 +23,7 @@ const app = express();
 app.use(helmet());
 app.use(
     cors({
-        origin: config.corsOrigins,
+        origin: config.corsOrigins.includes("*") ? true : config.corsOrigins,
         credentials: true
 
 }));
@@ -54,7 +54,12 @@ const start = async (): Promise<void> => {
     await connectDB();
     logger.add(new SequelizeTransport({ logModel: sequelize.models.apiLogs }) as any );
      //await verifyMailerConnection();
-     //await redis.connect();
+     await redis.connect();
+     const redisPing = await redis.ping();
+     if (redisPing !== "PONG") {
+         throw new Error(`Unexpected Redis ping response: ${redisPing}`);
+     }
+     logger.info("Redis ping/pong check succeeded");
 
     server = app.listen(config.port, ()=> {
         logger.info(`Server is running on http://localhost:${config.port}`)

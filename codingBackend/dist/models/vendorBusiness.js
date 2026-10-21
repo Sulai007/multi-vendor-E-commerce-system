@@ -26,6 +26,16 @@ vendorBusiness.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
     },
+    status: {
+        type: sequelize_1.DataTypes.ENUM("pending", "verified", "rejected", "suspended"),
+        allowNull: false,
+        defaultValue: "pending",
+    },
+    isVerified: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
     createdAt: sequelize_1.DataTypes.DATE,
     updatedAt: sequelize_1.DataTypes.DATE,
 }, {

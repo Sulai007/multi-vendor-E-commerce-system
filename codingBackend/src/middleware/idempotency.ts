@@ -139,14 +139,18 @@ export const idempotencyMiddleware = async (req: Request, res: Response, next: N
     }
 
     let responseBody: unknown;
+    let jsonResponseCaptured = false;
     const originalJson = res.json.bind(res);
     const originalSend = res.send.bind(res);
     res.json = ((body: unknown) => {
         responseBody = body;
+        jsonResponseCaptured = true;
         return originalJson(body);
     }) as Response["json"];
     res.send = ((body?: unknown) => {
-        responseBody = body;
+        if (!jsonResponseCaptured) {
+            responseBody = body;
+        }
         return originalSend(body);
     }) as Response["send"];
 

@@ -9,8 +9,12 @@ import {
     createBusinessSchema,
     deleteProductSchema,
     getBusinessProductsSchema,
+    getBusinessOrdersSchema,
+    getRefundRequestsSchema,
     getBusinessProfileSchema,
     updateBusinessSchema,
+    updateOrderStatusSchema,
+    updateRefundStatusSchema,
     updateProductSchema,
 } from "../schema/vendorSchema";
 
@@ -32,7 +36,13 @@ router.patch("/:businessId/products/:id", authenticate, authorize("vendor"), val
 
 router.delete("/:businessId/products/:id", authenticate, authorize("vendor"), validate(deleteProductSchema), idempotencyMiddleware, vendorController.deleteProduct);
 
-router.get("/:businessId/products", authenticate, authorize("vendor"), vendorController.getOrderByStatus)
+router.get("/:businessId/orders", authenticate, authorize("vendor"), validate(getBusinessOrdersSchema), vendorController.getOrderByStatus)
+
+router.patch("/:businessId/orders/:itemId/status", authenticate, authorize("vendor"), validate(updateOrderStatusSchema), idempotencyMiddleware, vendorController.updateOrderStatus);
+
+router.get("/:businessId/refund-requests", authenticate, authorize("vendor"), validate(getRefundRequestsSchema), vendorController.getRefundRequests);
+
+router.patch("/:businessId/refund-requests/:refundRequestId/status", authenticate, authorize("vendor"), validate(updateRefundStatusSchema), idempotencyMiddleware, vendorController.updateRefundStatus);
 
 export default router;
 

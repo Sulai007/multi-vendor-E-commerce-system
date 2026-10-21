@@ -124,14 +124,18 @@ const idempotencyMiddleware = async (req, res, next) => {
         return;
     }
     let responseBody;
+    let jsonResponseCaptured = false;
     const originalJson = res.json.bind(res);
     const originalSend = res.send.bind(res);
     res.json = ((body) => {
         responseBody = body;
+        jsonResponseCaptured = true;
         return originalJson(body);
     });
     res.send = ((body) => {
-        responseBody = body;
+        if (!jsonResponseCaptured) {
+            responseBody = body;
+        }
         return originalSend(body);
     });
     res.once("finish", () => {

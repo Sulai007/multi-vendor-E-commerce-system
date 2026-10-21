@@ -1,5 +1,6 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, StringDataType } from "sequelize";
 import { sequelize } from "../config/db";
+import type { BusinessStatus } from "../types/lifecycle";
 import type { product } from "./product";
 
 
@@ -10,6 +11,8 @@ export class vendorBusiness extends Model<InferAttributes<vendorBusiness>,
     declare userId: string;
     declare businessName: string;
     declare description: string;
+    declare status: CreationOptional<BusinessStatus>;
+    declare isVerified: CreationOptional<boolean>;
     //declare products?: product[];
     declare readonly createdAt: CreationOptional<Date>;
     declare readonly updatedAt: CreationOptional<Date>;
@@ -35,6 +38,16 @@ vendorBusiness.init(
         description: {
             type: DataTypes.STRING(255),
             allowNull: false,
+        },
+        status: {
+            type: DataTypes.ENUM("pending", "verified", "rejected", "suspended"),
+            allowNull: false,
+            defaultValue: "pending",
+        },
+        isVerified: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
         
         createdAt: DataTypes.DATE,

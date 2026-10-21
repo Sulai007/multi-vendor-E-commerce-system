@@ -47,7 +47,7 @@ OrderItem.init({
         defaultValue: "pending"
     },
     refundStatus: {
-        type: sequelize_1.DataTypes.ENUM("none", "requested", "processing", "refunded", "rejected"),
+        type: sequelize_1.DataTypes.ENUM("none", "requested", "processing", "escalated", "refunded", "rejected"),
         allowNull: false,
         defaultValue: "none"
     },

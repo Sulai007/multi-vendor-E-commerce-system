@@ -1,7 +1,8 @@
 import { Model, InferAttributes, CreationOptional, DataTypes, InferCreationAttributes } from "sequelize";
 import { sequelize } from "../config/db";
+import type { OrderStatus } from "../types/lifecycle";
 
-export type orderStatus = "pending" | "cancelled" | "processed" | "shipped" | "delivered";
+export type orderStatus = OrderStatus;
 export type paymentStatus = "unpaid" | "paid" | "refunded"
 
 
@@ -10,9 +11,12 @@ export class Order extends Model<InferAttributes<Order>, InferCreationAttributes
 declare id: CreationOptional<string>; 
 declare customerId: string;
 declare totalAmount?: number;
-declare orderStatus: CreationOptional<orderStatus>;
+declare orderStatus: CreationOptional<OrderStatus>;
 declare paymentStatus: CreationOptional<paymentStatus>;
 declare shippingAddress: string;
+declare isCancelled: CreationOptional<boolean>;
+declare cancelledAt: CreationOptional<Date | null>;
+declare cancelReason: CreationOptional<string | null>;
 declare readonly createdAt: CreationOptional<Date>;
 declare readonly updatedAt: CreationOptional<Date>;
 }
@@ -37,7 +41,7 @@ Order.init(
         },
         orderStatus:
         {
-            type: DataTypes.ENUM("pending","processed", "shipped", "delivered"),
+            type: DataTypes.ENUM("pending","processed", "shipped", "delivered", "cancelled"),
             allowNull: false,
             defaultValue: "pending"
         },
@@ -51,6 +55,19 @@ Order.init(
         {
             type: DataTypes.STRING(256),
             allowNull: false,
+        },
+        isCancelled: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
+        cancelledAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        cancelReason: {
+            type: DataTypes.STRING(500),
+            allowNull: true,
         },
         createdAt: DataTypes.DATE(),
         updatedAt: DataTypes.DATE()

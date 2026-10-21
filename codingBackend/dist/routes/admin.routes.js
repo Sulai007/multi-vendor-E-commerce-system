@@ -37,6 +37,9 @@ const express_1 = require("express");
 const logController = __importStar(require("../controllers/logController"));
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const requirePassword_1 = require("../middleware/requirePassword");
+const validate_middleware_1 = require("../middleware/validate.middleware");
+const paginationSchema_1 = require("../schema/paginationSchema");
+const adminSchema_1 = require("../schema/adminSchema");
 const router = (0, express_1.Router)();
 /**
  * @swagger
@@ -47,6 +50,13 @@ const router = (0, express_1.Router)();
  *     description: Returns API request logs for administrators after validating the administrator password. Logs are ordered from newest to oldest.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
  *     requestBody:
  *       required: true
  *       content:
@@ -81,6 +91,8 @@ const router = (0, express_1.Router)();
  *                           method: { type: string, example: GET }
  *                           statusCode: { type: integer, example: 200 }
  *                           ipAddress: { type: string, example: 127.0.0.1 }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       '401':
  *         description: Missing or invalid access token, or invalid administrator password
  *         content:
@@ -102,13 +114,15 @@ const router = (0, express_1.Router)();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
  */
-router.post("/", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), requirePassword_1.requirePassword, logController.getApiLogs);
-router.post("/getlogs", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), requirePassword_1.requirePassword, logController.getApiLogs);
+router.post("/", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(paginationSchema_1.paginationRequestSchema), requirePassword_1.requirePassword, logController.getApiLogs);
+router.get("/logs", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(paginationSchema_1.paginationRequestSchema), requirePassword_1.requirePassword, logController.getApiLogs);
+router.post("/logs", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(paginationSchema_1.paginationRequestSchema), requirePassword_1.requirePassword, logController.getApiLogs);
+router.post("/getlogs", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(paginationSchema_1.paginationRequestSchema), requirePassword_1.requirePassword, logController.getApiLogs);
 /**
  * @swagger
- * /api/admin/logs/accessPassword:
+ * /api/admin/accessPassword:
  *   post:
- *     tags: [Log]
+ *     tags: [Admin]
  *     summary: Verify administrator access
  *     description: Allows access only to authenticated users with the administrator role to set an access password for sensitive operations. The provided password is validated against the stored administrator password.
  *     requestBody:
@@ -141,4 +155,24 @@ router.post("/getlogs", auth_middleware_1.authenticate, (0, auth_middleware_1.au
  *             schema: { $ref: '#/components/schemas/ApiErrorResponse' }
  */
 router.post("/accessPassword", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.updatePassword);
+router.get("/users", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getUsersSchema), logController.getUsers);
+router.get("/users/:userId", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getUserByIdSchema), logController.getUserById);
+router.patch("/users/:userId/role", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateUserRoleSchema), logController.updateUserRole);
+router.patch("/users/:userId/status", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateUserStatusSchema), logController.updateUserStatus);
+router.get("/businesses", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getBusinessesSchema), logController.getBusinessesForAdmin);
+router.get("/businesses/:businessId", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getBusinessByIdAdminSchema), logController.getBusinessByIdForAdmin);
+router.patch("/businesses/:businessId/verify", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.verifyBusinessSchema), logController.verifyBusiness);
+router.patch("/businesses/:businessId/status", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateBusinessStatusSchema), logController.updateBusinessStatus);
+router.get("/products", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getProductsSchema), logController.getProductsForAdmin);
+router.get("/products/:productId", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getProductByIdAdminSchema), logController.getProductByIdForAdmin);
+router.patch("/products/:productId/status", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateProductStatusSchema), logController.updateProductStatus);
+router.get("/orders", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getOrdersSchema), logController.getOrdersAdmin);
+router.get("/orders/:orderId", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getOrderByIdAdminSchema), logController.getOrderByIdAdmin);
+router.patch("/orders/:orderId/status", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateAdminOrderStatusSchema), logController.updateAdminOrderStatus);
+router.get("/refund-requests", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.getRefundRequestsAdminSchema), logController.getRefundRequestsAdmin);
+router.patch("/refund-requests/:refundRequestId/status", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), (0, validate_middleware_1.validate)(adminSchema_1.updateRefundStatusAdminSchema), logController.updateRefundStatusAdmin);
+router.get("/dashboard/summary", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.getDashboardSummary);
+router.get("/metrics", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.getMetrics);
+router.get("/settings", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.getSettings);
+router.patch("/settings", auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)("admin"), logController.updateSettings);
 exports.default = router;

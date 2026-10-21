@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProfile = exports.logOutUser = exports.refreshTokens = exports.resetPassword = exports.forgotPassword = exports.resendOtp = exports.verifyOtp = exports.loginUser = exports.registerUser = void 0;
+exports._ = exports.logOutUser = exports.getProfile = exports.refreshTokens = exports.resetPassword = exports.forgotPassword = exports.resendOtp = exports.verifyOtp = exports.loginUser = exports.registerUser = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const models_1 = require("../models");
 const apiError_1 = require("../utils/apiError");
@@ -10,6 +10,7 @@ const passwordHelper_1 = require("../helper/passwordHelper");
 const otpHelper_1 = require("../helper/otpHelper");
 const tokenHelper_1 = require("../helper/tokenHelper");
 const authEmail_1 = require("../email/authEmail");
+const mailDelivery_1 = require("../email/mailDelivery");
 const issueOtp = async (userId, purpose) => {
     await models_1.Otp.update({ consumedAt: new Date() }, { where: { userId, purpose, consumedAt: null } });
     const code = (0, otpHelper_1.generateOtpCode)();
@@ -100,7 +101,6 @@ const registerUser = async (input) => {
         existing.password = await (0, passwordHelper_1.hashPassword)(input.password);
         await existing.save();
         const code = await issueOtp(existing.id, "email_verification");
-        logger_1.logger.info(`Use this for your OTP Code ${code}`);
         await (0, authEmail_1.sendOtpEmail)({
             to: existing.email,
             firstName: existing.firstName,
@@ -118,13 +118,13 @@ const registerUser = async (input) => {
         password: await (0, passwordHelper_1.hashPassword)(input.password),
     });
     const code = await issueOtp(user.id, "email_verification");
-    logger_1.logger.info(`Use this for your OTP Code ${code}`);
-    await (0, authEmail_1.sendOtpEmail)({
-        to: user.email,
-        firstName: user.firstName,
-        code,
-        purpose: "email_verification",
-    });
+    // await sendOtpEmail({
+    //     to: user.email,
+    //     firstName: user.firstName,
+    //     code,
+    //     purpose: "email_verification",
+    // });
+    console.log(`OTP for ${user.email}: ${code}`); // Log the OTP to the console for testing purposes
     return user.toSafeJSON();
 };
 exports.registerUser = registerUser;
@@ -163,6 +163,7 @@ const verifyOtp = async (input) => {
     if (input.purpose === "email_verification") {
         user.isEmailVerified = true;
         await user.save();
+        await (0, mailDelivery_1.sendEmailSafely)(() => (0, authEmail_1.sendWelcomeEmail)({ to: user.email, firstName: user.firstName }));
         return { type: "email_verified", user: user.toSafeJSON() };
     }
     const resetToken = (0, tokenHelper_1.signPasswordResetToken)(user.id);
@@ -178,19 +179,18 @@ const resendOtp = async (input) => {
         if (user.isEmailVerified) {
             throw apiError_1.ApiError.badRequest("Email is already verified.");
         }
-        else if (!user) {
-            return;
-        }
-        await assertOtpCoolDown(user.id, input.purpose);
-        const code = await issueOtp(user.id, input.purpose);
-        logger_1.logger.info(`Use this for your OPT Code ${code}`);
-        await (0, authEmail_1.sendOtpEmail)({
-            to: user.email,
-            firstName: user.firstName,
-            code,
-            purpose: input.purpose,
-        });
     }
+    else if (!user) {
+        return;
+    }
+    await assertOtpCoolDown(user.id, input.purpose);
+    const code = await issueOtp(user.id, input.purpose);
+    await (0, authEmail_1.sendOtpEmail)({
+        to: user.email,
+        firstName: user.firstName,
+        code,
+        purpose: input.purpose,
+    });
 };
 exports.resendOtp = resendOtp;
 const forgotPassword = async (email) => {
@@ -223,7 +223,7 @@ const resetPassword = async (input) => {
     user.password = await (0, passwordHelper_1.hashPassword)(input.newPassword);
     await user.save();
     await models_1.RefreshToken.update({ revokedAt: new Date() }, { where: { userId: user.id, revokedAt: null } });
-    await (0, authEmail_1.sendPasswordChangedEmail)({ to: user.email, firstName: user.firstName });
+    await (0, mailDelivery_1.sendEmailSafely)(() => (0, authEmail_1.sendPasswordChangedEmail)({ to: user.email, firstName: user.firstName }));
 };
 exports.resetPassword = resetPassword;
 const refreshTokens = async (rawRefreshToken, meta) => {
@@ -265,6 +265,14 @@ const refreshTokens = async (rawRefreshToken, meta) => {
     return { user: user.toSafeJSON(), ...tokens };
 };
 exports.refreshTokens = refreshTokens;
+const getProfile = async (userId) => {
+    const user = await models_1.User.findByPk(userId);
+    if (!user) {
+        throw apiError_1.ApiError.notFound("User not found");
+    }
+    return user.toSafeJSON();
+};
+exports.getProfile = getProfile;
 const logOutUser = async (rawRefreshToken, accessTokenPayload) => {
     const tokenHash = (0, tokenHelper_1.hashToken)(rawRefreshToken);
     await models_1.RefreshToken.update({ revokedAt: new Date() }, { where: { tokenHash, revokedAt: null } });
@@ -281,14 +289,14 @@ const logOutUser = async (rawRefreshToken, accessTokenPayload) => {
     }
 };
 exports.logOutUser = logOutUser;
-const getProfile = async (userId) => {
+const _ = async (userId) => {
     const user = await models_1.User.findByPk(userId);
     if (!user) {
         throw apiError_1.ApiError.notFound("User not found");
     }
     return user.toSafeJSON();
 };
-exports.getProfile = getProfile;
+exports._ = _;
 // export const getApiLogs = async () => {
 //     const logs = await apiLogs.findAll({
 //         order: [["createdAt", "DESC"]]});

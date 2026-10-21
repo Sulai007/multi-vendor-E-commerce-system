@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrderStatus = exports.getOrderByStatus = exports.deleteProduct = exports.updateProduct = exports.addProduct = exports.getBusinessProducts = exports.updateBusiness = exports.getBusinessProfile = exports.createBusiness = void 0;
+exports.updateRefundStatus = exports.getRefundRequests = exports.updateOrderStatus = exports.getOrderByStatus = exports.deleteProduct = exports.updateProduct = exports.addProduct = exports.getBusinessProducts = exports.updateBusiness = exports.getBusinessProfile = exports.createBusiness = void 0;
 const catchAsync_1 = require("../utils/catchAsync");
 const apiResponse_1 = require("../utils/apiResponse");
 const apiError_1 = require("../utils/apiError");
@@ -54,12 +54,13 @@ exports.getBusinessProfile = (0, catchAsync_1.catchAsync)(async (req, res) => {
     });
 });
 exports.updateBusiness = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const id = req.params.id;
+    const businessId = req.params.id;
+    const authenticatedUserId = req.user?.sub;
     const { businessName, description } = req.body;
     if (!businessName && !description) {
         throw new apiError_1.ApiError(400, "At least one field (businessName or description) must be provided for update");
     }
-    const updatedBusiness = await vendorService.updateBusiness(id, req.params.id, req.body);
+    const updatedBusiness = await vendorService.updateBusiness(authenticatedUserId, businessId, req.body);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 200,
         message: "Business updated successfully.",
@@ -70,15 +71,16 @@ exports.getBusinessProducts = (0, catchAsync_1.catchAsync)(async (req, res) => {
     // if (req.user?.role === "vendor" && req.user?.sub !== req.params.id) {
     //     throw new ApiError(403, "You are not authorized to fetch these products.");
     // }
-    const products = await vendorService.getBusinessProducts(req.params.businessId);
+    const result = await vendorService.getBusinessProducts(req.params.businessId, req.query.page, req.query.limit);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 200,
         message: "Vendor products fetched successfully.",
-        data: products,
+        data: result.items,
+        pagination: result.pagination,
     });
 });
 exports.addProduct = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const { name, description, price, quantity } = req.body;
+    const { name, description, price, quantity, categoryIds } = req.body;
     const file = req.file;
     if (!name || !description || !price || !quantity) {
         throw new apiError_1.ApiError(400, "Missing required fields: name, description, price, quantity");
@@ -91,6 +93,7 @@ exports.addProduct = (0, catchAsync_1.catchAsync)(async (req, res) => {
         description,
         price,
         quantity,
+        categoryIds,
         file
     };
     const product = await vendorService.addProduct(req.params.businessId, data);
@@ -119,13 +122,36 @@ exports.deleteProduct = (0, catchAsync_1.catchAsync)(async (req, res) => {
 exports.getOrderByStatus = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const status = req.query.status;
     const id = req.params.businessId;
-    const products = await vendorService.getOrderByStatus(id, status);
+    const result = await vendorService.getOrderByStatus(id, status, req.query.page, req.query.limit);
     (0, apiResponse_1.sendSuccess)(res, {
         statusCode: 200,
         message: "products fetched successfully",
-        data: products
+        data: result.items,
+        pagination: result.pagination,
     });
 });
 exports.updateOrderStatus = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const id = req.params.businessId;
+    const orderItem = await vendorService.updateOrderStatus(req.params.itemId, req.params.businessId, req.body.status);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 200,
+        message: "Order status updated successfully.",
+        data: orderItem,
+    });
+});
+exports.getRefundRequests = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await vendorService.getRefundRequests(req.user?.sub, req.params.businessId, req.query.status, req.query.page, req.query.limit);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 200,
+        message: "Refund requests fetched successfully",
+        data: result.items,
+        pagination: result.pagination,
+    });
+});
+exports.updateRefundStatus = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await vendorService.updateRefundStatus(req.user?.sub, req.params.businessId, req.params.refundRequestId, req.body.status);
+    (0, apiResponse_1.sendSuccess)(res, {
+        statusCode: 200,
+        message: "Refund status updated successfully",
+        data: result,
+    });
 });

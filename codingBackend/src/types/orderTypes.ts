@@ -1,3 +1,5 @@
+import type { ItemStatus, OrderStatus, RefundStatus } from "./lifecycle";
+
 export interface OrderItemAttributes {
     orderId: string;
     productId: string;
@@ -5,14 +7,14 @@ export interface OrderItemAttributes {
     name: string;
     quantity: number;
     unitPrice: number;
-    itemStatus?: "pending" | "shipped" | "delivered";
-    refundStatus?: "none" | "requested" | "processing" | "refunded" | "rejected";
+    itemStatus?: ItemStatus;
+    refundStatus?: RefundStatus;
 };
 
 export interface OrderAttributes {
     id: string;
     customerId: string;
-    orderStatus?: "pending" | "processed" | "shipped" | "delivered";
+    orderStatus?: OrderStatus;
     paymentStatus?: "unpaid" | "paid" | "refunded";
     shippingAddress: string;
 }
