@@ -1,8 +1,8 @@
 # Multi-Vendor E-Commerce System
 
-A multi-vendor commerce project with a TypeScript/Express API and frontend workspaces. The API supports account authentication, vendor onboarding, business and product management, customer orders, refunds, and administrative workflows.
+A multi-vendor commerce API built with TypeScript and Express. It supports account authentication, vendor onboarding, business and product management, customer orders, refunds, and administrative workflows.
 
-> **Project status:** The backend is the most complete part of this repository. The frontend directories contain Vite/React workspace applications and starter UI code; they are not currently wired into the backend by a root-level development command.
+This repository contains the backend only. Frontend applications are maintained separately and are intentionally excluded from this repository.
 
 ## Contents
 
@@ -18,7 +18,6 @@ A multi-vendor commerce project with a TypeScript/Express API and frontend works
 - [Authentication and permissions](#authentication-and-permissions)
 - [Caching and reliability](#caching-and-reliability)
 - [Data model overview](#data-model-overview)
-- [Frontend workspaces](#frontend-workspaces)
 - [Contributing](#contributing)
 
 ## Features
@@ -48,7 +47,6 @@ A multi-vendor commerce project with a TypeScript/Express API and frontend works
 | Product images | Cloudinary |
 | Email | Nodemailer |
 | API docs | OpenAPI 3 and Swagger UI |
-| Frontend workspaces | React, Vite, TypeScript, Tailwind CSS in the web workspace |
 
 ## Repository layout
 
@@ -71,14 +69,15 @@ A multi-vendor commerce project with a TypeScript/Express API and frontend works
 │   ├── scripts/           # Utility scripts, including category seeding
 │   ├── tests/             # Jest tests
 │   └── package.json
-├── React-app/
-│   ├── apps/web/          # Vite React application
-│   └── packages/ui/       # Shared UI workspace package
-└── react-frontend/
-    └── my-ts-app/         # Separate Vite React + TypeScript application
+└── codingBackend/
+    ├── src/               # API source code
+    ├── migrations/        # Sequelize database migrations
+    ├── scripts/           # Utility scripts, including category seeding
+    ├── tests/             # Jest tests
+    └── package.json
 ```
 
-The backend, the `React-app` npm workspace, and `react-frontend/my-ts-app` have separate package manifests. Install and run each from its own project directory.
+All commands in this README are run from `codingBackend/`.
 
 ## Requirements
 
@@ -341,26 +340,6 @@ The Sequelize models currently include:
 - **ReturnRequest** — refund requests associated with order items, customers, and businesses.
 - **Idempotency** — persisted request idempotency records.
 - **apiLogs**, **appSetting** — API request logs and application settings.
-
-## Frontend workspaces
-
-### `React-app/`
-
-An npm workspace with `apps/web` (Vite + React + TypeScript) and a shared `packages/ui` package. From `React-app/`:
-
-```powershell
-npm install
-npm run dev
-npm run build
-npm run lint
-npm run typecheck
-```
-
-The workspace uses Node.js 20 or newer. The application currently represents a frontend workspace/starter; configure API connectivity and application screens as the frontend is developed.
-
-### `react-frontend/my-ts-app/`
-
-A separate Vite + React + TypeScript application. Its scripts are defined in its local `package.json`; run `npm install` and `npm run dev` from that directory.
 
 ## Contributing
 
