@@ -23,6 +23,15 @@ type OrderLineEmailData = {
     unitPrice: number;
 };
 
+const publicBusinessWhere = {
+    status: "verified",
+    isVerified: true,
+};
+
+const publicProductWhere = {
+    status: "active",
+};
+
 export const getBusinesses = async(pageValue: unknown, limitValue: unknown) => {
     const { page, limit, offset } = getPagination(pageValue, limitValue);
     const cacheKey = `catalog:businesses:${page}:${limit}`;
@@ -35,6 +44,7 @@ export const getBusinesses = async(pageValue: unknown, limitValue: unknown) => {
     }
 
     const result = await vendorBusiness.findAndCountAll({
+        where: publicBusinessWhere,
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -59,9 +69,11 @@ export const getBusinessById = async(id: string): Promise<vendorBusiness> => {
         include: [{
             model: product,
             as: "product",
+            where: publicProductWhere,
+            required: false,
         }],
     });
-    if(!business) {
+    if(!business || business.status !== "verified" || business.isVerified !== true) {
         throw new ApiError(404, "Business not found")
     }
     await setCache(cacheKey, business);
@@ -69,6 +81,11 @@ export const getBusinessById = async(id: string): Promise<vendorBusiness> => {
 }
 
 export const getBusinessProducts = async(id: string, pageValue: unknown, limitValue: unknown) => {
+    const business = await vendorBusiness.findByPk(id);
+    if (!business || business.status !== "verified" || business.isVerified !== true) {
+        throw ApiError.notFound("Business not found");
+    }
+
     const { page, limit, offset } = getPagination(pageValue, limitValue);
     const cacheKey = `catalog:business:${id}:products:${page}:${limit}`;
     const cachedProducts = await getCache<{
@@ -80,9 +97,9 @@ export const getBusinessProducts = async(id: string, pageValue: unknown, limitVa
     }
 
     const result = await product.findAndCountAll({
-        where: { businessId: id },
+        where: { businessId: id, ...publicProductWhere },
         attributes: ["id", "businessId", "name", "description", "price", "quantity", "imageUrl", "categoryNames"],
-        include: [{ model: vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+        include: [{ model: vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"], where: publicBusinessWhere }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -109,11 +126,19 @@ export const searchProducts = async(search: string, pageValue: unknown, limitVal
 
     const result = await product.findAndCountAll({
         where: {
+            ...publicProductWhere,
             [Op.or]: [
                 { name: { [Op.iLike]: `%${search}%` } },
                 { description: { [Op.iLike]: `%${search}%` } },
             ],
         },
+        include: [{
+            model: vendorBusiness,
+            as: "vendorBusiness",
+            required: true,
+            where: publicBusinessWhere,
+            attributes: ["businessId", "businessName", "description"],
+        }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -139,9 +164,16 @@ export const getBusinessProductById = async( businessId: string, productId: stri
       const reqProduct = await product.findOne({
         where: {
             businessId: businessId,
-            id: productId
-            },
-            include: [{ model: vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+            id: productId,
+            ...publicProductWhere,
+        },
+        include: [{
+            model: vendorBusiness,
+            as: "vendorBusiness",
+            required: true,
+            where: publicBusinessWhere,
+            attributes: ["businessId", "businessName", "description"],
+        }],
       })
 
       if(!reqProduct){
@@ -169,8 +201,17 @@ export const getProductsByCategory = async(categoryId: string, pageValue: unknow
     }
 
     const result = await product.findAndCountAll({
-        where: { categoryNames: { [Op.contains]: [category.category] } },
-        include: [{ model: vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+        where: {
+            ...publicProductWhere,
+            categoryNames: { [Op.contains]: [category.category] },
+        },
+        include: [{
+            model: vendorBusiness,
+            as: "vendorBusiness",
+            required: true,
+            where: publicBusinessWhere,
+            attributes: ["businessId", "businessName", "description"],
+        }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],

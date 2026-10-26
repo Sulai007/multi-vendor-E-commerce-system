@@ -118,3 +118,29 @@
 {"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-20T12:15:41.882Z"}
 {"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-20T12:15:46.492Z"}
 {"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-20T12:15:51.511Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T12:36:06.781Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T12:36:57.650Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:46.690Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:47.423Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:48.722Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:50.268Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:52.279Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:54.796Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:57.809Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:01.336Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:05.358Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:09.868Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:14.882Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T10:27:42.566Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:02.862Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:02.962Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:03.970Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:05.489Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:07.507Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:10.027Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:13.037Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:16.573Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:20.581Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:25.090Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:30.114Z"}
+{"error":{"code":"EDNS","command":"CONN","errno":-3008,"hostname":"smtp.gmail.com","syscall":"getaddrinfo"},"level":"error","message":"SMTP connection verification failed:","service":"My Coding API","timestamp":"2026-10-26T11:04:09.818Z"}

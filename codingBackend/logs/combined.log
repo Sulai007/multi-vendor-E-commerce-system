@@ -1312,3 +1312,124 @@
 {"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-20T12:15:46.492Z"}
 {"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-20T12:15:51.504Z"}
 {"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-20T12:15:51.511Z"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-23T11:42:48.319Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-23T11:42:52.813Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-23T11:42:54.228Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-23T11:42:54.360Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-23T11:42:54.554Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-23T11:42:54.580Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-23T11:42:54.581Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T12:36:06.781Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T12:36:07.050Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-23T12:36:16.711Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-23T12:36:17.564Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T12:36:57.650Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T12:36:57.656Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-23T12:37:04.469Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-23T12:37:04.897Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:46.690Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:46.855Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:47.423Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:48.694Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:48.722Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:50.244Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:50.268Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:52.273Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:52.279Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:54.784Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:54.796Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:48:57.802Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:48:57.809Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:49:01.333Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:01.336Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:49:05.350Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:05.358Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:49:09.865Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:09.868Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-23T13:49:14.873Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-23T13:49:14.882Z"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T10:02:07.235Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T10:02:15.435Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:02:19.224Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:02:19.810Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T10:02:20.104Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T10:02:20.130Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T10:02:20.132Z"}
+{"duration":1959,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/register - Status: 201 - Duration: 1959.246 ms","method":"POST","path":"/api/auth/register","service":"My Coding API","statusCode":201,"timestamp":"2026-10-26T10:12:32.226Z","userId":null}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T10:15:17.417Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T10:15:29.005Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:15:32.785Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:15:33.656Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T10:15:34.050Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T10:15:34.073Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T10:15:34.075Z"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T10:17:06.076Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T10:17:27.165Z"}
+{"level":"info","message":"SMTP connection verified successfully.","service":"My Coding API","timestamp":"2026-10-26T10:17:30.826Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:17:31.173Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:17:31.776Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T10:17:32.076Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T10:17:32.168Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T10:17:32.169Z"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T10:24:45.795Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T10:24:57.871Z"}
+{"level":"info","message":"SMTP connection verified successfully.","service":"My Coding API","timestamp":"2026-10-26T10:24:59.502Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:25:00.992Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:25:01.595Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T10:25:01.868Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T10:25:01.887Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T10:25:01.888Z"}
+{"duration":4305,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/register - Status: 201 - Duration: 4305.471 ms","method":"POST","path":"/api/auth/register","service":"My Coding API","statusCode":201,"timestamp":"2026-10-26T10:27:01.940Z","userId":null}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T10:27:42.566Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T10:27:42.571Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:27:47.246Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:27:47.830Z"}
+{"duration":3559,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/verify-otp - Status: 200 - Duration: 3559.230 ms","method":"POST","path":"/api/auth/verify-otp","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:28:26.299Z","userId":null}
+{"duration":737,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/login - Status: 200 - Duration: 737.104 ms","method":"POST","path":"/api/auth/login","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:29:14.695Z","userId":null}
+{"level":"info","message":"Registering business for user: 0b67a255-7b69-4bbb-b641-4ae80d09b4ec, email: dolaposulaimon737@gmail.com, businessName: Gadget Hub","service":"My Coding API","timestamp":"2026-10-26T10:30:52.956Z"}
+{"duration":3468,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/business/register - Status: 200 - Duration: 3468.035 ms","method":"POST","path":"/api/business/register","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:30:55.955Z","userId":"0b67a255-7b69-4bbb-b641-4ae80d09b4ec"}
+{"duration":366,"ipAddress":"::1","level":"info","message":"Endpoint triggered: GET /api/auth/me - Status: 200 - Duration: 366.026 ms","method":"GET","path":"/api/auth/me","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:31:53.199Z","userId":"0b67a255-7b69-4bbb-b641-4ae80d09b4ec"}
+{"duration":737,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/logout - Status: 200 - Duration: 737.432 ms","method":"POST","path":"/api/auth/logout","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:33:05.477Z","userId":"0b67a255-7b69-4bbb-b641-4ae80d09b4ec"}
+{"duration":845,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/login - Status: 200 - Duration: 844.779 ms","method":"POST","path":"/api/auth/login","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:33:28.181Z","userId":null}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T10:36:11.953Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T10:36:17.836Z"}
+{"level":"info","message":"SMTP connection verified successfully.","service":"My Coding API","timestamp":"2026-10-26T10:36:19.522Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T10:36:27.098Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T10:36:27.728Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T10:36:28.009Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T10:36:28.026Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T10:36:28.027Z"}
+{"duration":1139,"ipAddress":"::1","level":"info","message":"Endpoint triggered: POST /api/auth/login - Status: 200 - Duration: 1139.140 ms","method":"POST","path":"/api/auth/login","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:37:32.438Z","userId":null}
+{"duration":402,"ipAddress":"::1","level":"info","message":"Endpoint triggered: GET /api/auth/me - Status: 200 - Duration: 401.658 ms","method":"GET","path":"/api/auth/me","service":"My Coding API","statusCode":200,"timestamp":"2026-10-26T10:38:02.147Z","userId":"0b67a255-7b69-4bbb-b641-4ae80d09b4ec"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T11:00:11.491Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T11:00:36.970Z"}
+{"level":"info","message":"SMTP connection verified successfully.","service":"My Coding API","timestamp":"2026-10-26T11:00:42.193Z"}
+{"level":"info","message":"Redis connecting...","service":"My Coding API","timestamp":"2026-10-26T11:00:49.743Z"}
+{"level":"info","message":"Redis ready","service":"My Coding API","timestamp":"2026-10-26T11:00:52.040Z"}
+{"level":"info","message":"Redis ping/pong check succeeded","service":"My Coding API","timestamp":"2026-10-26T11:00:52.430Z"}
+{"level":"info","message":"Server is running on http://localhost:3000","service":"My Coding API","timestamp":"2026-10-26T11:00:52.607Z"}
+{"level":"info","message":"swagger docs is running at http://localhost:3000/api-docs}","service":"My Coding API","timestamp":"2026-10-26T11:00:52.608Z"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:02.862Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:02.883Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:02.962Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:03.966Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:03.970Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:05.485Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:05.489Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:07.494Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:07.507Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:10.018Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:10.027Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:13.028Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:13.037Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:16.548Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:16.573Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:20.574Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:20.581Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:25.087Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:25.090Z"}
+{"level":"warn","message":"Redis reconnecting...","service":"My Coding API","timestamp":"2026-10-26T11:02:30.105Z"}
+{"error":"getaddrinfo ENOTFOUND glorious-filly-115563.upstash.io","level":"error","message":"Redis error","service":"My Coding API","timestamp":"2026-10-26T11:02:30.114Z"}
+{"level":"info","message":"Database connection established successfully.","service":"My Coding API","timestamp":"2026-10-26T11:04:05.160Z"}
+{"level":"info","message":"Database models synchronized successfully.","service":"My Coding API","timestamp":"2026-10-26T11:04:09.810Z"}
+{"error":{"code":"EDNS","command":"CONN","errno":-3008,"hostname":"smtp.gmail.com","syscall":"getaddrinfo"},"level":"error","message":"SMTP connection verification failed:","service":"My Coding API","timestamp":"2026-10-26T11:04:09.818Z"}

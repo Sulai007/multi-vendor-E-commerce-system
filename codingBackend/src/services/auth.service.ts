@@ -154,12 +154,12 @@ export const registerUser = async (input: { firstName: string; lastName: string;
 });
 
 const code = await issueOtp(user.id, "email_verification");
-// await sendOtpEmail({
-//     to: user.email,
-//     firstName: user.firstName,
-//     code,
-//     purpose: "email_verification",
-// });
+await sendOtpEmail({
+    to: user.email,
+    firstName: user.firstName,
+    code,
+    purpose: "email_verification",
+});
 
 console.log(`OTP for ${user.email}: ${code}`); // Log the OTP to the console for testing purposes
 

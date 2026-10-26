@@ -231,33 +231,32 @@ describe("customer product category queries", () => {
     jest.clearAllMocks();
   });
 
-  it("loads a business with its products without joining categories", async () => {
-    const business = { businessId: "business-1", product: [{ id: "product-1" }] };
+  it("loads only public businesses and active products for the catalog", async () => {
+    const business = { businessId: "business-1", status: "verified", isVerified: true, product: [{ id: "product-1", status: "active" }] };
     jest.mocked(vendorBusiness.findByPk).mockResolvedValue(business as never);
 
     await expect(getBusinessById("business-1")).resolves.toBe(business);
 
-    expect(vendorBusiness.findByPk).toHaveBeenCalledWith("business-1", {
-      include: [{
-        model: product,
-        as: "product",
-      }],
-    });
+    expect(vendorBusiness.findByPk).toHaveBeenCalledWith("business-1", expect.objectContaining({
+      include: [expect.objectContaining({ model: product, as: "product", where: { status: "active" } })],
+    }));
   });
 
   it("returns stored category names and the business profile when listing products", async () => {
+    jest.mocked(vendorBusiness.findByPk).mockResolvedValue({ businessId: "business-1", status: "verified", isVerified: true } as never);
     jest.mocked(product.findAndCountAll).mockResolvedValue({ rows: [], count: 0 } as never);
 
     await getBusinessProducts("business-1", "1", "10");
 
     const options = jest.mocked(product.findAndCountAll).mock.calls[0][0];
+    expect(options.where).toEqual(expect.objectContaining({ businessId: "business-1", status: "active" }));
     expect(options.include).toEqual(expect.arrayContaining([
-      expect.objectContaining({ model: vendorBusiness, as: "vendorBusiness" }),
+      expect.objectContaining({ model: vendorBusiness, as: "vendorBusiness", where: { status: "verified", isVerified: true } }),
     ]));
     expect(options.attributes).toContain("categoryNames");
   });
 
-  it("filters products by stored category name without joining categories", async () => {
+  it("filters products by stored category name and public visibility rules", async () => {
     jest.mocked(Category.findByPk).mockResolvedValue({ id: "category-1", category: "Electronics" } as never);
     jest.mocked(product.findAndCountAll).mockResolvedValue({ rows: [], count: 0 } as never);
 
@@ -267,10 +266,15 @@ describe("customer product category queries", () => {
     });
 
     const options = jest.mocked(product.findAndCountAll).mock.calls[0][0];
-    expect(options.where).toEqual({ categoryNames: { [Op.contains]: ["Electronics"] } });
-    expect(options.include).toEqual([
-      expect.objectContaining({ model: vendorBusiness, as: "vendorBusiness" }),
-    ]);
+    expect(options.where).toEqual(expect.objectContaining({
+      status: "active",
+      categoryNames: { [Op.contains]: ["Electronics"] },
+    }));
+    expect(options.include).toContainEqual(expect.objectContaining({
+      model: vendorBusiness,
+      as: "vendorBusiness",
+      where: { status: "verified", isVerified: true },
+    }));
     expect(options.offset).toBe(5);
   });
 
