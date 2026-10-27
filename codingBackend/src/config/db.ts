@@ -35,10 +35,8 @@ export const connectDB = async (): Promise<void> => {
     try {
         await sequelize.authenticate();
         logger.info("Database connection established successfully.");
-        if(!config.isProduction) {
-            await sequelize.sync({ alter: true });
-            logger.info("Database models synchronized successfully.");
-        }
+        await sequelize.sync();
+        logger.info("Database models synchronized successfully.");
     } catch (error) {
         logger.error("Database connection failed:", error);
         throw error;

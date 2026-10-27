@@ -53,7 +53,11 @@ let server: ReturnType<typeof app.listen>;
 const start = async (): Promise<void> => {
     await connectDB();
     logger.add(new SequelizeTransport({ logModel: sequelize.models.apiLogs }) as any );
-     await verifyMailerConnection();
+     try {
+        await verifyMailerConnection();
+    } catch (err) {
+        console.error("Mailer check failed (continuing):", err);
+    }
      await redis.connect();
      const redisPing = await redis.ping();
      if (redisPing !== "PONG") {
