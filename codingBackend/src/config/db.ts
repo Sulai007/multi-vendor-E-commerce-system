@@ -1,18 +1,24 @@
-import { Sequelize } from "sequelize";  
+import { Sequelize, Options } from "sequelize";  
 import { config } from "./env";
 import { logger } from "../utils/logger";
 
-export const sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
-    host: config.db.host,
-    port: config.db.port,
-    dialect: "postgres",
+const options: Options = {
     logging: config.db.logging ? (sql: string) => logger.debug(sql) : false,
     dialectOptions: config.db.ssl ? {
         ssl: {
             require: true,
             rejectUnauthorized: false
         },
-    } : {},
+    } : {}
+};
+
+export const sequelize = config.db.url
+    ? new Sequelize(config.db.url, options) :
+ new Sequelize(config.db.name, config.db.user, config.db.password, {
+    host: config.db.host,
+    port: config.db.port,
+    dialect: "postgres",
+    ...options,
     define: {
         underscored: true,
         timestamps: true,

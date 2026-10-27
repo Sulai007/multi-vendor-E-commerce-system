@@ -118,12 +118,12 @@ const registerUser = async (input) => {
         password: await (0, passwordHelper_1.hashPassword)(input.password),
     });
     const code = await issueOtp(user.id, "email_verification");
-    // await sendOtpEmail({
-    //     to: user.email,
-    //     firstName: user.firstName,
-    //     code,
-    //     purpose: "email_verification",
-    // });
+    await (0, authEmail_1.sendOtpEmail)({
+        to: user.email,
+        firstName: user.firstName,
+        code,
+        purpose: "email_verification",
+    });
     console.log(`OTP for ${user.email}: ${code}`); // Log the OTP to the console for testing purposes
     return user.toSafeJSON();
 };

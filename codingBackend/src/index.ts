@@ -89,9 +89,3 @@ process.on("unhandledRejection", (reason)=>{
 });
 
 export default app;
-
-
-// app.listen(PORT, () =>{
-//     console.log(`server is running on http://localhost:${PORT}`)
-//     console.log(`swagger docs is running at https://localhost:${PORT}/api-docs`)
-// });

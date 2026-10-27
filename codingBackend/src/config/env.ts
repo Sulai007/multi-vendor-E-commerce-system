@@ -15,7 +15,7 @@ const envSchema = z.object(
     {
         NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
         PORT: z.coerce.number().int().positive().default(3000),
-        APP_NAME: z.string().default("My Coding Api"),
+        APP_NAME: z.string().default("Multi-vendor E-commerce App"),
         API_BASE_URL: z.string().default("http://localhost:3000"),
         CORS_ORIGIN: z.string().default("*"),
 
@@ -24,8 +24,9 @@ const envSchema = z.object(
         DB_NAME: z.string().min(1, "DB_NAME is required"),
         DB_USER: z.string().min(1, "DB_USER is required"),
         DB_PASSWORD: z.string().min(1, "DB_PASSWORD is required"),
-        DB_SSL: envBoolean.default(false),
+        DB_SSL: envBoolean.default(true),
         DB_LOGGING: envBoolean.default(false),
+        DB_URL: z.string().min(1, "DB_URL is required"),
 
         JWT_ACCESS_SECRET: z.string().min(16, "JWT_ACCESS_SECRET must be at least 16 characters"),
         JWT_ACCESS_EXPIRES_IN: z.string().default("15m"),
@@ -82,6 +83,7 @@ export const config = {
         password: env.DB_PASSWORD,
         ssl: env.DB_SSL,
         logging: env.DB_LOGGING,
+        url: env.DB_URL
     },
     jwt: {
             accesssecret: env.JWT_ACCESS_SECRET,

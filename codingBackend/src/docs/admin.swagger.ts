@@ -1,96 +1,10 @@
 /**
  * @swagger
- * /api/admin:
- *   post:
- *     tags: [Admin]
- *     summary: Retrieve API request logs (legacy)
- *     description: Legacy alias for retrieving API logs. Prefer GET /api/admin/logs. Requires the administrator password in the request body.
- *     deprecated: true
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema: { type: integer, minimum: 1, default: 1 }
- *       - in: query
- *         name: limit
- *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [password]
- *             properties:
- *               password: { type: string, format: password }
- *     responses:
- *       '200': { description: API logs retrieved }
- *       '400': { description: Password missing or query invalid }
- *       '401': { description: Invalid administrator password or token }
- *       '403': { description: Administrator role required }
  * /api/admin/logs:
  *   get:
  *     tags: [Admin]
  *     summary: Retrieve API request logs
  *     description: Returns paginated API request logs, ordered newest first. Requires the administrator password in the request body.
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema: { type: integer, minimum: 1, default: 1 }
- *       - in: query
- *         name: limit
- *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [password]
- *             properties:
- *               password: { type: string, format: password }
- *     responses:
- *       '200': { description: API logs retrieved }
- *       '400': { description: Password missing or query invalid }
- *       '401': { description: Invalid administrator password or token }
- *       '403': { description: Administrator role required }
- *   post:
- *     tags: [Admin]
- *     summary: Retrieve API request logs (legacy)
- *     description: Legacy POST alias for GET /api/admin/logs.
- *     deprecated: true
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema: { type: integer, minimum: 1, default: 1 }
- *       - in: query
- *         name: limit
- *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [password]
- *             properties:
- *               password: { type: string, format: password }
- *     responses:
- *       '200': { description: API logs retrieved }
- *       '400': { description: Password missing or query invalid }
- *       '401': { description: Invalid administrator password or token }
- *       '403': { description: Administrator role required }
- * /api/admin/getlogs:
- *   post:
- *     tags: [Admin]
- *     summary: Retrieve API request logs (legacy)
- *     description: Legacy alias for retrieving API logs. Prefer GET /api/admin/logs.
- *     deprecated: true
  *     security:
  *       - bearerAuth: []
  *     parameters:

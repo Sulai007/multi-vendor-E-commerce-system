@@ -69,7 +69,7 @@ const options: swaggerJSDoc.Options = {
             }
         },
     },
-    apis: ["./src/routes/**/*.ts", "./src/docs/**/*.ts", "./src/index.ts"]
+    apis: ["./src/docs/**/*.ts"]
 }
 // const options: swaggerJSDoc.Options = {
 //     definition:{

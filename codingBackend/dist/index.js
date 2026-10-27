@@ -10,6 +10,7 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const env_1 = require("./config/env");
 const db_1 = require("./config/db");
 require("./models");
+const mailer_1 = require("./config/mailer");
 const logger_1 = require("./utils/logger");
 const errorHandler_middleware_1 = require("./middleware/errorHandler.middleware");
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
@@ -45,7 +46,7 @@ let server;
 const start = async () => {
     await (0, db_1.connectDB)();
     logger_1.logger.add(new sequelizeTransport_1.SequelizeTransport({ logModel: db_1.sequelize.models.apiLogs }));
-    //await verifyMailerConnection();
+    await (0, mailer_1.verifyMailerConnection)();
     await redis_1.default.connect();
     const redisPing = await redis_1.default.ping();
     if (redisPing !== "PONG") {

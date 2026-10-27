@@ -9,6 +9,13 @@ const mailDelivery_1 = require("../email/mailDelivery");
 const customerEmail_1 = require("../email/customerEmail");
 const vendorEmail_1 = require("../email/vendorEmail");
 const cacheService_1 = require("./cacheService");
+const publicBusinessWhere = {
+    status: "verified",
+    isVerified: true,
+};
+const publicProductWhere = {
+    status: "active",
+};
 const getBusinesses = async (pageValue, limitValue) => {
     const { page, limit, offset } = (0, pagination_1.getPagination)(pageValue, limitValue);
     const cacheKey = `catalog:businesses:${page}:${limit}`;
@@ -17,6 +24,7 @@ const getBusinesses = async (pageValue, limitValue) => {
         return cachedBusinesses;
     }
     const result = await models_1.vendorBusiness.findAndCountAll({
+        where: publicBusinessWhere,
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -39,9 +47,11 @@ const getBusinessById = async (id) => {
         include: [{
                 model: models_1.product,
                 as: "product",
+                where: publicProductWhere,
+                required: false,
             }],
     });
-    if (!business) {
+    if (!business || business.status !== "verified" || business.isVerified !== true) {
         throw new apiError_1.ApiError(404, "Business not found");
     }
     await (0, cacheService_1.setCache)(cacheKey, business);
@@ -49,6 +59,10 @@ const getBusinessById = async (id) => {
 };
 exports.getBusinessById = getBusinessById;
 const getBusinessProducts = async (id, pageValue, limitValue) => {
+    const business = await models_1.vendorBusiness.findByPk(id);
+    if (!business || business.status !== "verified" || business.isVerified !== true) {
+        throw apiError_1.ApiError.notFound("Business not found");
+    }
     const { page, limit, offset } = (0, pagination_1.getPagination)(pageValue, limitValue);
     const cacheKey = `catalog:business:${id}:products:${page}:${limit}`;
     const cachedProducts = await (0, cacheService_1.getCache)(cacheKey);
@@ -56,9 +70,9 @@ const getBusinessProducts = async (id, pageValue, limitValue) => {
         return cachedProducts;
     }
     const result = await models_1.product.findAndCountAll({
-        where: { businessId: id },
+        where: { businessId: id, ...publicProductWhere },
         attributes: ["id", "businessId", "name", "description", "price", "quantity", "imageUrl", "categoryNames"],
-        include: [{ model: models_1.vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+        include: [{ model: models_1.vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"], where: publicBusinessWhere }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -80,11 +94,19 @@ const searchProducts = async (search, pageValue, limitValue) => {
     }
     const result = await models_1.product.findAndCountAll({
         where: {
+            ...publicProductWhere,
             [sequelize_1.Op.or]: [
                 { name: { [sequelize_1.Op.iLike]: `%${search}%` } },
                 { description: { [sequelize_1.Op.iLike]: `%${search}%` } },
             ],
         },
+        include: [{
+                model: models_1.vendorBusiness,
+                as: "vendorBusiness",
+                required: true,
+                where: publicBusinessWhere,
+                attributes: ["businessId", "businessName", "description"],
+            }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],
@@ -106,9 +128,16 @@ const getBusinessProductById = async (businessId, productId) => {
     const reqProduct = await models_1.product.findOne({
         where: {
             businessId: businessId,
-            id: productId
+            id: productId,
+            ...publicProductWhere,
         },
-        include: [{ model: models_1.vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+        include: [{
+                model: models_1.vendorBusiness,
+                as: "vendorBusiness",
+                required: true,
+                where: publicBusinessWhere,
+                attributes: ["businessId", "businessName", "description"],
+            }],
     });
     if (!reqProduct) {
         throw apiError_1.ApiError.notFound("product not found");
@@ -129,8 +158,17 @@ const getProductsByCategory = async (categoryId, pageValue, limitValue) => {
         return cachedProducts;
     }
     const result = await models_1.product.findAndCountAll({
-        where: { categoryNames: { [sequelize_1.Op.contains]: [category.category] } },
-        include: [{ model: models_1.vendorBusiness, as: "vendorBusiness", attributes: ["businessId", "businessName", "description"] }],
+        where: {
+            ...publicProductWhere,
+            categoryNames: { [sequelize_1.Op.contains]: [category.category] },
+        },
+        include: [{
+                model: models_1.vendorBusiness,
+                as: "vendorBusiness",
+                required: true,
+                where: publicBusinessWhere,
+                attributes: ["businessId", "businessName", "description"],
+            }],
         limit,
         offset,
         order: [["createdAt", "DESC"]],

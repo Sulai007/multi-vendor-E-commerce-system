@@ -92,6 +92,7 @@ exports.me = (0, catchAsync_1.catchAsync)(async (req, res) => {
         throw apiError_1.ApiError.unauthorized();
     }
     const user = await authService.getProfile(req.user.sub);
+    console.log(req.user);
     (0, apiResponse_1.sendSuccess)(res, { message: "Profile retrieved successfully", data: { user } });
 });
 // export const getApiLogs = catchAsync(async (req: Request, res: Response) => {

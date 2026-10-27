@@ -12,7 +12,7 @@ const envBoolean = zod_1.z.preprocess((value) => (typeof value === "string" ? va
 const envSchema = zod_1.z.object({
     NODE_ENV: zod_1.z.enum(["development", "test", "production"]).default("development"),
     PORT: zod_1.z.coerce.number().int().positive().default(3000),
-    APP_NAME: zod_1.z.string().default("My Coding Api"),
+    APP_NAME: zod_1.z.string().default("Multi-vendor E-commerce App"),
     API_BASE_URL: zod_1.z.string().default("http://localhost:3000"),
     CORS_ORIGIN: zod_1.z.string().default("*"),
     DB_HOST: zod_1.z.string().min(1, "DB_HOST is required"),

@@ -30,6 +30,13 @@ jest.mock("../src/email/mailDelivery", () => ({
   sendEmailSafely: jest.fn((send: () => Promise<void>) => send()),
 }));
 
+jest.mock("../src/services/cacheService", () => ({
+  getCache: jest.fn().mockResolvedValue(null),
+  setCache: jest.fn().mockResolvedValue(undefined),
+  invalidateCatalogCache: jest.fn().mockResolvedValue(undefined),
+  invalidateVendorBusinessCache: jest.fn().mockResolvedValue(undefined),
+}));
+
 jest.mock("../src/email/customerEmail", () => ({
   sendCustomerOrderCancellationEmail: jest.fn(),
   sendCustomerOrderStatusEmail: jest.fn(),
